@@ -3,181 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FART - Login</title>
+    <title>Smart TP - Login</title>
     <style>
+        /* ... (stili precedenti) ... */
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
+            background-image: url('sfondo01.jpg');
+        }
+        .lang-selector {
             display: flex;
             justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-image: url('background.jpg');
-            background-size: cover;
-            background-position: center;
+            margin-bottom: 15px;
         }
-        .container {
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            max-width: 400px;
-            width: 100%;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-        }
-        input, select {
-            margin: 10px 0;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        button {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 4px;
+        .lang-icon {
+            margin: 0 5px;
             cursor: pointer;
+            padding: 5px;
+            border: 1px solid transparent;
         }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .links {
-            margin-top: 15px;
-            text-align: center;
-        }
-        .links a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        .links a:hover {
-            text-decoration: underline;
-        }
-        @media (max-width: 600px) {
-            .container {
-                width: 90%;
-            }
+        .lang-icon:hover, .lang-icon.active {
+            border-color: #007bff;
+            border-radius: 3px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1 id="loginTitle">Login FART</h1>
-        <form id="loginForm">
-            <select id="langSelect">
-                <option value="it">Italiano</option>
-                <option value="en">English</option>
-                <option value="de">Deutsch</option>
-                <option value="fr">Français</option>
-            </select>
-            <input type="email" id="email" placeholder="Email" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <button type="submit" id="loginButton">Accedi</button>
-        </form>
-        <p id="message"></p>
-        <div class="links">
-            <a href="#" id="forgotPassword">Password dimenticata?</a>
-            <br>
-            <a href="#" id="register">Registrati</a>
+        <h1 id="loginTitle">Smart TP</h1>
+        <div class="lang-selector">
+            <span class="lang-icon" data-lang="it">🇮🇹</span>
+            <span class="lang-icon" data-lang="de">🇩🇪</span>
+            <span class="lang-icon" data-lang="fr">🇫🇷</span>
+            <span class="lang-icon" data-lang="en">🇬🇧</span>
         </div>
+        <!-- ... (resto del HTML) ... -->
     </div>
     <script>
         const translations = {
             it: {
-                loginTitle: "Login FART",
-                email: "Email",
-                password: "Password",
-                loginButton: "Accedi",
-                forgotPassword: "Password dimenticata?",
-                register: "Registrati"
+                loginTitle: "Smart TP",
+                // ... (altre traduzioni) ...
             },
-            en: {
-                loginTitle: "FART Login",
-                email: "Email",
-                password: "Password",
-                loginButton: "Login",
-                forgotPassword: "Forgot Password?",
-                register: "Register"
-            },
-            de: {
-                loginTitle: "FART Anmeldung",
-                email: "E-Mail",
-                password: "Passwort",
-                loginButton: "Anmelden",
-                forgotPassword: "Passwort vergessen?",
-                register: "Registrieren"
-            },
-            fr: {
-                loginTitle: "Connexion FART",
-                email: "E-mail",
-                password: "Mot de passe",
-                loginButton: "Se connecter",
-                forgotPassword: "Mot de passe oublié ?",
-                register: "S'inscrire"
-            }
+            // ... (altre lingue) ...
         };
 
         function updateLanguage(lang) {
-            document.getElementById('loginTitle').textContent = translations[lang].loginTitle;
-            document.getElementById('email').placeholder = translations[lang].email;
-            document.getElementById('password').placeholder = translations[lang].password;
-            document.getElementById('loginButton').textContent = translations[lang].loginButton;
-            document.getElementById('forgotPassword').textContent = translations[lang].forgotPassword;
-            document.getElementById('register').textContent = translations[lang].register;
+            document.querySelectorAll('.lang-icon').forEach(icon => {
+                icon.classList.remove('active');
+                if (icon.dataset.lang === lang) {
+                    icon.classList.add('active');
+                }
+            });
+            // ... (resto della funzione updateLanguage) ...
         }
 
-        document.getElementById('langSelect').addEventListener('change', function() {
-            updateLanguage(this.value);
+        document.querySelectorAll('.lang-icon').forEach(icon => {
+            icon.addEventListener('click', function() {
+                updateLanguage(this.dataset.lang);
+            });
         });
 
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const messageElement = document.getElementById('message');
-
-            try {
-                const response = await fetch('https://tuo-backend-url.onrender.com/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ email, password }),
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    messageElement.textContent = `Benvenuto, ${data.nome} ${data.cognome}!`;
-                    localStorage.setItem('token', data.token);
-                    if (data.isFirstLogin) {
-                        // Reindirizza alla pagina di cambio password
-                        window.location.href = 'change-password.html';
-                    }
-                } else {
-                    messageElement.textContent = data.error;
-                }
-            } catch (error) {
-                messageElement.textContent = 'Errore di connessione al server';
-            }
-        });
-
-        // Placeholder per le funzionalità non ancora implementate
-        document.getElementById('forgotPassword').addEventListener('click', function(e) {
-            e.preventDefault();
-            alert('Funzionalità di recupero password non ancora implementata');
-        });
-
-        document.getElementById('register').addEventListener('click', function(e) {
-            e.preventDefault();
-            alert('Funzionalità di registrazione non ancora implementata');
-        });
-
-        // Inizializza la lingua
-        updateLanguage('it');
+        // ... (resto dello script) ...
     </script>
 </body>
 </html>
