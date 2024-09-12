@@ -22,13 +22,13 @@
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            max-width: 400px;
-            width: 100%;
+            width: 400px;
             position: relative;
+            padding-bottom: 80px; /* Aumentato per dare più spazio in fondo */
         }
         .logo {
             display: block;
-            margin: 0 auto 20px;
+            margin: 0 auto 40px; /* Aumentato il margine inferiore */
             width: 300px;
             max-width: 100%;
         }
@@ -61,20 +61,21 @@
             position: absolute;
             bottom: 20px;
             left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
         }
         .links a {
             color: rgb(150,123,102);
             text-decoration: none;
-            display: block;
-            margin-bottom: 10px;
         }
         .links a:hover {
             text-decoration: underline;
         }
         .lang-selector {
             position: absolute;
-            top: 10px;
-            right: 10px;
+            top: 20px; /* Aumentato per dare più spazio dal logo */
+            right: 20px;
             display: flex;
         }
         .lang-icon {
@@ -126,7 +127,63 @@
         </div>
     </div>
     <script>
-        // ... (il resto del JavaScript rimane lo stesso) ...
+        const translations = {
+            it: {
+                email: "Email",
+                password: "Password",
+                loginButton: "Accedi",
+                forgotPassword: "Password dimenticata?",
+                register: "Registrati"
+            },
+            en: {
+                email: "Email",
+                password: "Password",
+                loginButton: "Login",
+                forgotPassword: "Forgot Password?",
+                register: "Register"
+            },
+            de: {
+                email: "E-Mail",
+                password: "Passwort",
+                loginButton: "Anmelden",
+                forgotPassword: "Passwort vergessen?",
+                register: "Registrieren"
+            },
+            fr: {
+                email: "E-mail",
+                password: "Mot de passe",
+                loginButton: "Se connecter",
+                forgotPassword: "Mot de passe oublié ?",
+                register: "S'inscrire"
+            }
+        };
+
+        function updateLanguage(lang) {
+            document.querySelectorAll('.lang-icon').forEach(icon => {
+                icon.classList.remove('active');
+            });
+            document.querySelector(`.lang-icon[data-lang="${lang}"]`).classList.add('active');
+            
+            document.getElementById('email').placeholder = translations[lang].email;
+            document.getElementById('password').placeholder = translations[lang].password;
+            document.getElementById('loginButton').textContent = translations[lang].loginButton;
+            document.getElementById('forgotPassword').textContent = translations[lang].forgotPassword;
+            document.getElementById('register').textContent = translations[lang].register;
+        }
+
+        document.querySelectorAll('.lang-icon').forEach(icon => {
+            icon.addEventListener('click', function() {
+                updateLanguage(this.dataset.lang);
+            });
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            // ... (il resto del codice per la gestione del login rimane invariato) ...
+        });
+
+        // Inizializza la lingua
+        updateLanguage('it');
     </script>
 </body>
 </html>
