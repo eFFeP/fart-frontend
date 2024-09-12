@@ -24,11 +24,11 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             width: 400px;
             position: relative;
-            padding-bottom: 60px;
+            padding-bottom: 50px;
         }
         .logo {
             display: block;
-            margin: calc(300px * 0.6) auto 20px; /* 60% dell'altezza del logo (assumendo che sia quadrato) */
+            margin: calc(300px * 0.3) auto 20px; /* 30% dell'altezza del logo */
             width: 300px;
             max-width: 100%;
         }
@@ -43,7 +43,7 @@
             border-radius: 4px;
         }
         button {
-            margin: 10px auto;
+            margin: 10px auto 5px;
             padding: 10px 20px;
             background-color: rgb(150,123,102);
             color: white;
@@ -58,12 +58,10 @@
             background-color: rgb(130,103,82);
         }
         .links {
-            position: absolute;
-            bottom: 30px;
-            left: 20px;
-            right: 20px;
+            margin-top: 5px;
             display: flex;
             justify-content: space-between;
+            padding: 0 20px;
         }
         .links a {
             color: rgb(150,123,102);
@@ -107,6 +105,7 @@
             text-align: center;
             color: rgb(150,123,102);
             font-size: 12px;
+            margin-top: 15px;
         }
         @media (max-width: 600px) {
             .container {
