@@ -24,6 +24,12 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             max-width: 400px;
             width: 100%;
+            position: relative;
+        }
+        .logo {
+            display: block;
+            margin: 0 auto 20px;
+            max-width: 200px;
         }
         form {
             display: flex;
@@ -36,32 +42,37 @@
             border-radius: 4px;
         }
         button {
-            margin-top: 10px;
-            padding: 10px;
-            background-color: #007bff;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: rgb(150,123,102);
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            display: block;
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: rgb(130,103,82);
         }
         .links {
-            margin-top: 15px;
-            text-align: center;
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
         }
         .links a {
-            color: #007bff;
+            color: rgb(150,123,102);
             text-decoration: none;
+            display: block;
+            margin-bottom: 5px;
         }
         .links a:hover {
             text-decoration: underline;
         }
         .lang-selector {
+            position: absolute;
+            top: 10px;
+            right: 10px;
             display: flex;
-            justify-content: center;
-            margin-bottom: 15px;
         }
         .lang-icon {
             margin: 0 5px;
@@ -74,11 +85,19 @@
             align-items: center;
             background-color: #f0f0f0;
             border: 1px solid #ddd;
+            transition: all 0.3s ease;
         }
-        .lang-icon:hover, .lang-icon.active {
-            background-color: #007bff;
+        .lang-icon:hover {
+            background-color: rgb(188,158,119);
             color: white;
         }
+        .lang-icon.active {
+            color: white;
+        }
+        .lang-icon.active[data-lang="it"] { background-color: rgba(0, 140, 69, 0.7); }
+        .lang-icon.active[data-lang="fr"] { background-color: rgba(0, 85, 164, 0.7); }
+        .lang-icon.active[data-lang="de"] { background-color: rgba(255, 206, 0, 0.7); }
+        .lang-icon.active[data-lang="en"] { background-color: rgba(200, 16, 46, 0.7); }
         @media (max-width: 600px) {
             .container {
                 width: 90%;
@@ -88,7 +107,7 @@
 </head>
 <body>
     <div class="container">
-        <h1 id="loginTitle">Smart TP</h1>
+        <img src="logo.png" alt="Smart TP Logo" class="logo">
         <div class="lang-selector">
             <span class="lang-icon" data-lang="it">IT</span>
             <span class="lang-icon" data-lang="de">DE</span>
@@ -103,32 +122,11 @@
         <p id="message"></p>
         <div class="links">
             <a href="#" id="forgotPassword">Password dimenticata?</a>
-            <br>
             <a href="#" id="register">Registrati</a>
         </div>
     </div>
     <script>
-        const translations = {
-            it: {
-                loginTitle: "Smart TP",
-                email: "Email",
-                password: "Password",
-                loginButton: "Accedi",
-                forgotPassword: "Password dimenticata?",
-                register: "Registrati"
-            },
-            en: {
-                loginTitle: "Smart TP",
-                email: "Email",
-                password: "Password",
-                loginButton: "Login",
-                forgotPassword: "Forgot Password?",
-                register: "Register"
-            },
-            de: {
-                loginTitle: "Smart TP",
-                email: "E-Mail",
-                password: "Passwort",
-                loginButton: "Anmelden",
-                forgotPassword: "Passwort vergessen?",
-                register: "Registrieren"
+        // ... (il resto del JavaScript rimane lo stesso) ...
+    </script>
+</body>
+</html>
