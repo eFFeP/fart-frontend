@@ -5,7 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart TP - Login</title>
     <style>
-        /* ... (altri stili rimangono invariati) ... */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: url('sfondo01.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            width: 400px;
+            position: relative;
+            padding-bottom: 50px;
+        }
+        .logo {
+            display: block;
+            margin: calc(300px * 0.2) auto 20px; /* 20% dell'altezza del logo */
+            width: 300px;
+            max-width: 100%;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        input {
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            margin: 10px auto 5px;
+            padding: 10px 20px;
+            background-color: rgb(150,123,102);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: block;
+            width: 80%;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: rgb(130,103,82);
+        }
+        .links {
+            margin-top: 5px;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+        .links a {
+            color: rgb(150,123,102);
+            text-decoration: none;
+        }
+        .links a:hover {
+            text-decoration: underline;
+        }
+        .lang-selector {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+        }
         .lang-icon {
             margin: 0 5px;
             cursor: pointer;
@@ -18,7 +88,7 @@
             background-color: #f0f0f0;
             border: 1px solid #ddd;
             transition: all 0.3s ease;
-            color: rgb(188,158,119);
+            color: rgb(188,158,119); /* Nuovo colore del testo per i pulsanti non selezionati */
         }
         .lang-icon:hover {
             background-color: rgb(188,158,119);
@@ -34,14 +104,96 @@
             left: 0;
             right: 0;
             text-align: center;
-            color: rgb(68, 145, 170);
+            color: rgb(68, 145, 170); /* Nuovo colore per PS Design */
             font-size: 12px;
             margin-top: 15px;
         }
-        /* ... (altri stili rimangono invariati) ... */
+        @media (max-width: 600px) {
+            .container {
+                width: 90%;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- ... (il resto del HTML rimane invariato) ... -->
+    <div class="container">
+        <img src="logo.png" alt="Smart TP Logo" class="logo">
+        <div class="lang-selector">
+            <span class="lang-icon" data-lang="it">IT</span>
+            <span class="lang-icon" data-lang="de">DE</span>
+            <span class="lang-icon" data-lang="fr">FR</span>
+            <span class="lang-icon" data-lang="en">EN</span>
+        </div>
+        <form id="loginForm">
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit" id="loginButton">Accedi</button>
+        </form>
+        <p id="message"></p>
+        <div class="links">
+            <a href="#" id="forgotPassword">Password dimenticata?</a>
+            <a href="#" id="register">Registrati</a>
+        </div>
+        <div class="ps-design">PS Design</div>
+    </div>
+    <script>
+        const translations = {
+            it: {
+                email: "Email",
+                password: "Password",
+                loginButton: "Accedi",
+                forgotPassword: "Password dimenticata?",
+                register: "Registrati"
+            },
+            en: {
+                email: "Email",
+                password: "Password",
+                loginButton: "Login",
+                forgotPassword: "Forgot Password?",
+                register: "Register"
+            },
+            de: {
+                email: "E-Mail",
+                password: "Passwort",
+                loginButton: "Anmelden",
+                forgotPassword: "Passwort vergessen?",
+                register: "Registrieren"
+            },
+            fr: {
+                email: "E-mail",
+                password: "Mot de passe",
+                loginButton: "Se connecter",
+                forgotPassword: "Mot de passe oublié ?",
+                register: "S'inscrire"
+            }
+        };
+
+        function updateLanguage(lang) {
+            document.querySelectorAll('.lang-icon').forEach(icon => {
+                icon.classList.remove('active');
+            });
+            document.querySelector(`.lang-icon[data-lang="${lang}"]`).classList.add('active');
+            
+            document.getElementById('email').placeholder = translations[lang].email;
+            document.getElementById('password').placeholder = translations[lang].password;
+            document.getElementById('loginButton').textContent = translations[lang].loginButton;
+            document.getElementById('forgotPassword').textContent = translations[lang].forgotPassword;
+            document.getElementById('register').textContent = translations[lang].register;
+        }
+
+        document.querySelectorAll('.lang-icon').forEach(icon => {
+            icon.addEventListener('click', function() {
+                updateLanguage(this.dataset.lang);
+            });
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            // ... (il resto del codice per la gestione del login rimane invariato) ...
+        });
+
+        // Inizializza la lingua
+        updateLanguage('it');
+    </script>
 </body>
 </html>
