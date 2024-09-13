@@ -1,2 +1,2 @@
-# fart-frontend
+# smarttp-frontend
 Frontend per l'applicazione FART
