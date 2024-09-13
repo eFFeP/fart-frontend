@@ -28,7 +28,7 @@
         }
         .logo {
             display: block;
-            margin: calc(300px * 0.2) auto 20px; /* 20% dell'altezza del logo */
+            margin: calc(300px * 0.2) auto 20px;
             width: 300px;
             max-width: 100%;
         }
@@ -88,7 +88,7 @@
             background-color: #f0f0f0;
             border: 1px solid #ddd;
             transition: all 0.3s ease;
-            color: rgb(188,158,119); /* Nuovo colore del testo per i pulsanti non selezionati */
+            color: rgb(188,158,119);
         }
         .lang-icon:hover {
             background-color: rgb(188,158,119);
@@ -104,9 +104,14 @@
             left: 0;
             right: 0;
             text-align: center;
-            color: rgb(68, 145, 170); /* Nuovo colore per PS Design */
+            color: rgb(68, 145, 170);
             font-size: 12px;
             margin-top: 15px;
+        }
+        #message {
+            text-align: center;
+            color: rgb(150,123,102);
+            margin-top: 10px;
         }
         @media (max-width: 600px) {
             .container {
@@ -143,32 +148,59 @@
                 password: "Password",
                 loginButton: "Accedi",
                 forgotPassword: "Password dimenticata?",
-                register: "Registrati"
+                register: "Registrati",
+                loginSuccess: "Accesso effettuato con successo!",
+                loginError: "Errore durante l'accesso. Riprova.",
+                forgotPasswordPrompt: "Inserisci la tua email per il recupero password:",
+                forgotPasswordSuccess: "Se l'email esiste, riceverai istruzioni per il reset della password.",
+                forgotPasswordError: "Errore durante la richiesta di recupero password",
+                registerPrompt: "Funzionalità di registrazione non ancora implementata nell'interfaccia"
             },
             en: {
                 email: "Email",
                 password: "Password",
                 loginButton: "Login",
                 forgotPassword: "Forgot Password?",
-                register: "Register"
+                register: "Register",
+                loginSuccess: "Login successful!",
+                loginError: "Error during login. Please try again.",
+                forgotPasswordPrompt: "Enter your email for password recovery:",
+                forgotPasswordSuccess: "If the email exists, you will receive password reset instructions.",
+                forgotPasswordError: "Error during password recovery request",
+                registerPrompt: "Registration functionality not yet implemented in the interface"
             },
             de: {
                 email: "E-Mail",
                 password: "Passwort",
                 loginButton: "Anmelden",
                 forgotPassword: "Passwort vergessen?",
-                register: "Registrieren"
+                register: "Registrieren",
+                loginSuccess: "Anmeldung erfolgreich!",
+                loginError: "Fehler bei der Anmeldung. Bitte versuchen Sie es erneut.",
+                forgotPasswordPrompt: "Geben Sie Ihre E-Mail-Adresse für die Passwortwiederherstellung ein:",
+                forgotPasswordSuccess: "Wenn die E-Mail existiert, erhalten Sie Anweisungen zum Zurücksetzen des Passworts.",
+                forgotPasswordError: "Fehler bei der Anforderung zur Passwortwiederherstellung",
+                registerPrompt: "Registrierungsfunktion noch nicht in der Benutzeroberfläche implementiert"
             },
             fr: {
                 email: "E-mail",
                 password: "Mot de passe",
                 loginButton: "Se connecter",
                 forgotPassword: "Mot de passe oublié ?",
-                register: "S'inscrire"
+                register: "S'inscrire",
+                loginSuccess: "Connexion réussie !",
+                loginError: "Erreur lors de la connexion. Veuillez réessayer.",
+                forgotPasswordPrompt: "Entrez votre e-mail pour la récupération du mot de passe :",
+                forgotPasswordSuccess: "Si l'e-mail existe, vous recevrez des instructions pour réinitialiser le mot de passe.",
+                forgotPasswordError: "Erreur lors de la demande de récupération du mot de passe",
+                registerPrompt: "Fonctionnalité d'inscription pas encore implémentée dans l'interface"
             }
         };
 
+        let currentLang = 'it';
+
         function updateLanguage(lang) {
+            currentLang = lang;
             document.querySelectorAll('.lang-icon').forEach(icon => {
                 icon.classList.remove('active');
             });
@@ -189,7 +221,58 @@
 
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            // ... (il resto del codice per la gestione del login rimane invariato) ...
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const messageElement = document.getElementById('message');
+
+            try {
+                const response = await fetch('https://autisti.onrender.com/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email, password }),
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    messageElement.textContent = translations[currentLang].loginSuccess;
+                    localStorage.setItem('token', data.token);
+                    if (data.isFirstLogin) {
+                        alert('Per favore, cambia la tua password.');
+                    }
+                } else {
+                    messageElement.textContent = translations[currentLang].loginError;
+                }
+            } catch (error) {
+                console.error('Error during login:', error);
+                messageElement.textContent = translations[currentLang].loginError;
+            }
+        });
+
+        document.getElementById('forgotPassword').addEventListener('click', function(e) {
+            e.preventDefault();
+            const email = prompt(translations[currentLang].forgotPasswordPrompt);
+            if (email) {
+                fetch('https://autisti.onrender.com/forgot-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email }),
+                })
+                .then(response => response.json())
+                .then(data => alert(translations[currentLang].forgotPasswordSuccess))
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert(translations[currentLang].forgotPasswordError);
+                });
+            }
+        });
+
+        document.getElementById('register').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert(translations[currentLang].registerPrompt);
         });
 
         // Inizializza la lingua
