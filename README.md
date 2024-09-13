@@ -1,2 +1,2 @@
 # smarttp-frontend
-Frontend per l'applicazione FART
+Frontend per l'applicazione smarttp
