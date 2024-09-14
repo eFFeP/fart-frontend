@@ -92,7 +92,11 @@
     } else if (userRole === 'admin') {
         // Mostra funzionalità specifiche per admin
     }
-
+// Nel tuo script esistente
+if (userRole === 'admin' || userRole === 'superadmin') {
+    adminPanel.style.display = 'block';
+    adminPanel.href = 'admin-panel.html'; // Aggiungi questa riga
+}
     logoutButton.addEventListener('click', function(e) {
         e.preventDefault();
         localStorage.removeItem('token');
