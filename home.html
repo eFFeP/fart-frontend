@@ -70,29 +70,36 @@
     </nav>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const menuIcon = document.querySelector('.menu-icon');
-            const menu = document.querySelector('.menu');
-            const adminPanel = document.getElementById('adminPanel');
-            const logoutButton = document.getElementById('logout');
+       document.addEventListener('DOMContentLoaded', function() {
+    const menuIcon = document.querySelector('.menu-icon');
+    const menu = document.querySelector('.menu');
+    const adminPanel = document.getElementById('adminPanel');
+    const logoutButton = document.getElementById('logout');
 
-            menuIcon.addEventListener('click', function() {
-                menu.classList.toggle('open');
-            });
+    menuIcon.addEventListener('click', function() {
+        menu.classList.toggle('open');
+    });
 
-            // Controlla se l'utente è un amministratore
-            const userRole = localStorage.getItem('userRole');
-            if (userRole === 'admin' || userRole === 'superadmin') {
-                adminPanel.style.display = 'block';
-            }
+    // Controlla il ruolo dell'utente
+    const userRole = localStorage.getItem('userRole');
+    if (userRole === 'admin' || userRole === 'superadmin') {
+        adminPanel.style.display = 'block';
+    }
 
-            logoutButton.addEventListener('click', function(e) {
-                e.preventDefault();
-                localStorage.removeItem('token');
-                localStorage.removeItem('userRole');
-                window.location.href = 'index.html';
-            });
-        });
+    // Aggiungi qui la logica per mostrare/nascondere elementi in base al ruolo
+    if (userRole === 'superadmin') {
+        // Mostra funzionalità specifiche per superadmin
+    } else if (userRole === 'admin') {
+        // Mostra funzionalità specifiche per admin
+    }
+
+    logoutButton.addEventListener('click', function(e) {
+        e.preventDefault();
+        localStorage.removeItem('token');
+        localStorage.removeItem('userRole');
+        window.location.href = 'index.html';
+    });
+});
     </script>
 </body>
 </html>
