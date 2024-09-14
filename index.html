@@ -113,16 +113,6 @@
             color: rgb(150,123,102);
             margin-top: 10px;
         }
-        @media screen and (max-width: 768px) {
-            body {
-                align-items: flex-start;
-                padding-top: 5vh;
-            }
-            .container {
-                max-height: 90vh;
-                overflow-y: auto;
-            }
-        }
     </style>
 </head>
 <body>
@@ -239,16 +229,15 @@
                     body: JSON.stringify({ email, password }),
                 });
                 const data = await response.json();
-// Nel gestore del submit del form di login
-if (response.ok) {
-    const data = await response.json();
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('userRole', data.role);
-    window.location.href = 'home.html';
-} else {
-    messageElement.textContent = translations[currentLang].loginError;
-}
-                
+
+                if (response.ok) {
+                    messageElement.textContent = translations[currentLang].loginSuccess;
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('userRole', data.role);
+                    window.location.href = 'home.html';
+                } else {
+                    messageElement.textContent = translations[currentLang].loginError;
+                }
             } catch (error) {
                 console.error('Error during login:', error);
                 messageElement.textContent = translations[currentLang].loginError;
@@ -257,33 +246,4 @@ if (response.ok) {
 
         document.getElementById('forgotPassword').addEventListener('click', function(e) {
             e.preventDefault();
-            const email = prompt(translations[currentLang].forgotPasswordPrompt);
-            if (email) {
-                fetch('https://autisti.onrender.com/forgot-password', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ email }),
-                })
-                .then(response => response.json())
-                .then(data => {
-                    alert(translations[currentLang].forgotPasswordSuccess);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert(translations[currentLang].forgotPasswordError);
-                });
-            }
-        });
-
-        document.getElementById('register').addEventListener('click', function(e) {
-            e.preventDefault();
-            alert(translations[currentLang].registerPrompt);
-        });
-
-        // Inizializza la lingua
-        updateLanguage('it');
-    </script>
-</body>
-</html>
+            const email = prompt(translations[current
