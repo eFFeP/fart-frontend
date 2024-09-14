@@ -186,12 +186,13 @@
         
         <button id="addUserButton" onclick="showAddUserForm()">Aggiungi Utente</button>
 
-        <div class="tab">
-            <button class="tablinks" onclick="openTab(event, 'Users')">Gestione Utenti</button>
-            <button class="tablinks" onclick="openTab(event, 'Groups')">Gestione Gruppi</button>
-        </div>
+      <div class="tab">
+    <button class="tablinks" onclick="openTab(event, 'Users')">Gestione Utenti</button>
+    <button class="tablinks" onclick="openTab(event, 'Groups')">Gestione Gruppi</button>
+    <button class="tablinks" onclick="openTab(event, 'AddUser')">Aggiungi Utente</button>
+  </div>
 
-        <div id="Users" class="tabcontent">
+  <div id="Users" class="tabcontent">
             <h2>Gestione Utenti</h2>
             <table id="usersTable">
                 <thead>
@@ -214,7 +215,7 @@
         </div>
     </div>
 
-    <div id="addUserForm">
+ <div id="AddUser" class="tabcontent">
         <h3>Aggiungi Nuovo Utente</h3>
         <form>
             <input type="text" id="newUsername" placeholder="Username" required>
