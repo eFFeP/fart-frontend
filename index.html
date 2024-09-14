@@ -239,15 +239,16 @@
                     body: JSON.stringify({ email, password }),
                 });
                 const data = await response.json();
-
-                if (response.ok) {
-                    messageElement.textContent = translations[currentLang].loginSuccess;
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('userRole', data.role);
-                    window.location.href = 'home.html';
-                } else {
-                    messageElement.textContent = translations[currentLang].loginError;
-                }
+// Nel gestore del submit del form di login
+if (response.ok) {
+    const data = await response.json();
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('userRole', data.role);
+    window.location.href = 'home.html';
+} else {
+    messageElement.textContent = translations[currentLang].loginError;
+}
+                
             } catch (error) {
                 console.error('Error during login:', error);
                 messageElement.textContent = translations[currentLang].loginError;
