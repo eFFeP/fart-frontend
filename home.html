@@ -1,58 +1,7 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart TP - Home</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            background-image: url('sfondo01.jpg');
-            background-size: cover;
-            background-position: center;
-        }
-        .container {
-            padding: 20px;
-            color: white;
-        }
-        .menu-icon {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            cursor: pointer;
-            z-index: 1000;
-            font-size: 24px;
-            color: white;
-        }
-        .menu {
-            position: fixed;
-            top: 0;
-            right: -300px;
-            width: 300px;
-            height: 100vh;
-            background-color: rgba(255, 255, 255, 0.9);
-            transition: right 0.3s ease;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        .menu.open {
-            right: 0;
-        }
-        .menu ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        .menu ul li {
-            margin-bottom: 10px;
-        }
-        .menu ul li a {
-            color: #333;
-            text-decoration: none;
-        }
-    </style>
+    <!-- ... altri contenuti ... -->
 </head>
 <body>
     <div class="container">
@@ -64,46 +13,57 @@
         <ul>
             <li><a href="#">Home</a></li>
             <li><a href="#">Profilo</a></li>
-            <li id="adminPanel" style="display: none;"><a href="#">Pannello Amministrativo</a></li>
+            <li id="adminPanel" style="display: none;"><a href="admin-panel.html">Pannello Amministrativo</a></li>
             <li><a href="#" id="logout">Logout</a></li>
         </ul>
     </nav>
 
     <script>
-       document.addEventListener('DOMContentLoaded', function() {
-    const menuIcon = document.querySelector('.menu-icon');
-    const menu = document.querySelector('.menu');
-    const adminPanel = document.getElementById('adminPanel');
-    const logoutButton = document.getElementById('logout');
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuIcon = document.querySelector('.menu-icon');
+            const menu = document.querySelector('.menu');
+            const adminPanel = document.getElementById('adminPanel');
+            const logoutButton = document.getElementById('logout');
 
-    menuIcon.addEventListener('click', function() {
-        menu.classList.toggle('open');
-    });
+            menuIcon.addEventListener('click', function() {
+                menu.classList.toggle('open');
+            });
 
-    // Controlla il ruolo dell'utente
-    const userRole = localStorage.getItem('userRole');
-    if (userRole === 'admin' || userRole === 'superadmin') {
-        adminPanel.style.display = 'block';
-    }
+            // Controlla il ruolo dell'utente
+            const userRole = localStorage.getItem('userRole');
+            if (userRole === 'admin' || userRole === 'superadmin') {
+                adminPanel.style.display = 'block';
+            }
 
-    // Aggiungi qui la logica per mostrare/nascondere elementi in base al ruolo
-    if (userRole === 'superadmin') {
-        // Mostra funzionalità specifiche per superadmin
-    } else if (userRole === 'admin') {
-        // Mostra funzionalità specifiche per admin
-    }
-// Nel tuo script esistente
-if (userRole === 'admin' || userRole === 'superadmin') {
-    adminPanel.style.display = 'block';
-    adminPanel.href = 'admin-panel.html'; // Aggiungi questa riga
-}
-    logoutButton.addEventListener('click', function(e) {
-        e.preventDefault();
-        localStorage.removeItem('token');
-        localStorage.removeItem('userRole');
-        window.location.href = 'index.html';
-    });
-});
+            logoutButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                localStorage.removeItem('token');
+                localStorage.removeItem('userRole');
+                window.location.href = 'index.html';
+            });
+
+            // Implementazione del logout automatico
+            let inactivityTimer;
+
+            function resetInactivityTimer() {
+                clearTimeout(inactivityTimer);
+                inactivityTimer = setTimeout(logout, 5 * 60 * 1000); // 5 minuti
+            }
+
+            function logout() {
+                localStorage.removeItem('token');
+                localStorage.removeItem('userRole');
+                window.location.href = 'index.html';
+            }
+
+            // Resetta il timer su ogni interazione dell'utente
+            ['click', 'touchstart', 'mousemove'].forEach(evt => 
+                document.addEventListener(evt, resetInactivityTimer, false)
+            );
+
+            // Avvia il timer quando la pagina si carica
+            resetInactivityTimer();
+        });
     </script>
 </body>
 </html>
