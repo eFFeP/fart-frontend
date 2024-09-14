@@ -246,4 +246,20 @@
 
         document.getElementById('forgotPassword').addEventListener('click', function(e) {
             e.preventDefault();
-            const email = prompt(translations[current
+            const email = prompt(translations[currentLang].forgotPasswordPrompt);
+            if (email) {
+                // Implementare la logica per il recupero password
+                alert(translations[currentLang].forgotPasswordSuccess);
+            }
+        });
+
+        document.getElementById('register').addEventListener('click', function(e) {
+            e.preventDefault();
+            alert(translations[currentLang].registerPrompt);
+        });
+
+        // Inizializza la lingua
+        updateLanguage('it');
+    </script>
+</body>
+</html>
