@@ -107,7 +107,7 @@
             evt.currentTarget.className += " active";
         }
 
-      function loadUsers() {
+        function loadUsers() {
             const token = localStorage.getItem('token');
             fetch('https://autisti.onrender.com/admin/users', {
                 headers: {
@@ -121,17 +121,29 @@
                     return response.json();
                 })
                 .then(users => {
-                    // ... popola la tabella degli utenti ...
+                    const tableBody = document.querySelector("#usersTable tbody");
+                    tableBody.innerHTML = '';
+                    users.forEach(user => {
+                        const row = `
+                            <tr>
+                                <td>${user.username}</td>
+                                <td>${user.email}</td>
+                                <td>${user.role}</td>
+                                <td>
+                                    <button onclick="editUser(${user.id})">Modifica</button>
+                                    <button onclick="resetPassword(${user.id})">Reset Password</button>
+                                </td>
+                            </tr>
+                        `;
+                        tableBody.innerHTML += row;
+                    });
                 })
                 .catch(error => {
                     console.error('Errore nel caricamento degli utenti:', error);
                     if (error.message === 'Accesso non autorizzato') {
-                        // Reindirizza alla pagina di login
                         window.location.href = 'index.html';
                     }
                 });
-                })
-                .catch(error => console.error('Errore nel caricamento degli utenti:', error));
         }
 
         function showAddUserForm() {
@@ -146,11 +158,6 @@
             // Implementa la logica per resettare la password di un utente
         }
 
-        // Carica gli utenti quando la pagina si apre
-        document.addEventListener('DOMContentLoaded', function() {
-            openTab(event, 'Users');
-            loadUsers();
-        });
         // Implementazione del logout automatico
         let inactivityTimer;
 
@@ -170,15 +177,12 @@
             document.addEventListener(evt, resetInactivityTimer, false)
         );
 
-        // Avvia il timer quando la pagina si carica
-        resetInactivityTimer();
-
         // Carica gli utenti quando la pagina si apre
         document.addEventListener('DOMContentLoaded', function() {
             openTab(event, 'Users');
             loadUsers();
+            resetInactivityTimer();
         });
-
     </script>
 </body>
 </html>
