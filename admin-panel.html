@@ -151,6 +151,34 @@
             openTab(event, 'Users');
             loadUsers();
         });
+        // Implementazione del logout automatico
+        let inactivityTimer;
+
+        function resetInactivityTimer() {
+            clearTimeout(inactivityTimer);
+            inactivityTimer = setTimeout(logout, 5 * 60 * 1000); // 5 minuti
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userRole');
+            window.location.href = 'index.html';
+        }
+
+        // Resetta il timer su ogni interazione dell'utente
+        ['click', 'touchstart', 'mousemove'].forEach(evt => 
+            document.addEventListener(evt, resetInactivityTimer, false)
+        );
+
+        // Avvia il timer quando la pagina si carica
+        resetInactivityTimer();
+
+        // Carica gli utenti quando la pagina si apre
+        document.addEventListener('DOMContentLoaded', function() {
+            openTab(event, 'Users');
+            loadUsers();
+        });
+
     </script>
 </body>
 </html>
