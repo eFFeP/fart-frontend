@@ -107,27 +107,29 @@
             evt.currentTarget.className += " active";
         }
 
-        function loadUsers() {
-            // Qui faremo una richiesta al backend per ottenere la lista degli utenti
-            fetch('https://autisti.onrender.com/admin/users')
-                .then(response => response.json())
+      function loadUsers() {
+            const token = localStorage.getItem('token');
+            fetch('https://autisti.onrender.com/admin/users', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Accesso non autorizzato');
+                    }
+                    return response.json();
+                })
                 .then(users => {
-                    const tableBody = document.querySelector("#usersTable tbody");
-                    tableBody.innerHTML = '';
-                    users.forEach(user => {
-                        const row = `
-                            <tr>
-                                <td>${user.username}</td>
-                                <td>${user.email}</td>
-                                <td>${user.role}</td>
-                                <td>
-                                    <button onclick="editUser(${user.id})">Modifica</button>
-                                    <button onclick="resetPassword(${user.id})">Reset Password</button>
-                                </td>
-                            </tr>
-                        `;
-                        tableBody.innerHTML += row;
-                    });
+                    // ... popola la tabella degli utenti ...
+                })
+                .catch(error => {
+                    console.error('Errore nel caricamento degli utenti:', error);
+                    if (error.message === 'Accesso non autorizzato') {
+                        // Reindirizza alla pagina di login
+                        window.location.href = 'index.html';
+                    }
+                });
                 })
                 .catch(error => console.error('Errore nel caricamento degli utenti:', error));
         }
