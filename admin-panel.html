@@ -381,57 +381,57 @@
             });
         }
 
-        function showAddUserForm() {
-            document.getElementById('addUserForm').style.display = 'block';
-        }
+       function showAddUserForm() {
+    const form = document.getElementById('addUserForm');
+    form.style.display = 'block';
+    
+    // Resetta tutti i campi del form
+    form.reset();
+    
+    // Inizializza le opzioni per deposito e funzione
+    updateDepositoOptions();
+    
+    // Assicurati che tutti i campi siano visibili
+    const allInputs = form.querySelectorAll('input, select');
+    allInputs.forEach(input => {
+        input.style.display = 'block';
+    });
+}
 
-        function hideAddUserForm() {
-            document.getElementById('addUserForm').style.display = 'none';
-        }
+function hideAddUserForm() {
+    document.getElementById('addUserForm').style.display = 'none';
+}
 
-        function addUser(event) {
-            event.preventDefault();
-            const token = localStorage.getItem('token');
-            const userData = {
-                username: document.getElementById('newUsername').value,
-                email: document.getElementById('newEmail').value,
-                password: document.getElementById('newPassword').value,
-                nome: document.getElementById('newNome').value,
-                cognome: document.getElementById('newCognome').value,
-                ditta: document.getElementById('newDitta').value,
-                settore: document.getElementById('newSettore').value,
-                deposito: document.getElementById('newDeposito').value,
-                funzione: document.getElementById('newSettore').value === 'Autolinee'
-                    ? document.getElementById('newFunzioneAutolineeSelect').value
-                    : Array.from(document.querySelectorAll('input[name="newFunzione"]:checked')).map(cb => cb.value),
-                matricola: document.getElementById('newMatricola').value,
-                dataNascita: document.getElementById('newDataNascita').value,
-                telefono: document.getElementById('newTelefono').value,
-                role: document.getElementById('newRole').value
-            };
+function updateDepositoOptions() {
+    const settore = document.getElementById('newSettore').value;
+    const depositoSelect = document.getElementById('newDeposito');
+    const funzioneAutolinee = document.getElementById('newFunzioneAutolinee');
+    const funzioneFerrovia = document.getElementById('newFunzioneFerrovia');
 
-            fetch('https://autisti.onrender.com/admin/users', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(userData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.id) {
-                    alert('Utente creato con successo');
-                    hideAddUserForm();
-                    loadUsers();
-                } else {
-                    alert('Errore nella creazione dell\'utente');
-                }
-            })
-            .catch(error => {
-                console.error('Errore:', error);
-                alert('Errore nella creazione dell\'utente');
-            });
+    depositoSelect.innerHTML = '';
+    if (settore === 'Autolinee') {
+        ['Bignasco', 'Locarno', 'Riazzino'].forEach(deposito => {
+            const option = document.createElement('option');
+            option.value = deposito;
+            option.textContent = deposito;
+            depositoSelect.appendChild(option);
+        });
+        funzioneAutolinee.style.display = 'block';
+        funzioneFerrovia.style.display = 'none';
+    } else if (settore === 'Ferrovia') {
+        const option = document.createElement('option');
+        option.value = 'Muralto';
+        option.textContent = 'Muralto';
+        depositoSelect.appendChild(option);
+        funzioneAutolinee.style.display = 'none';
+        funzioneFerrovia.style.display = 'block';
+    }
+}
+
+// Assicurati di chiamare questa funzione quando il DOM è caricato
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('newSettore').addEventListener('change', updateDepositoOptions);
+});
         }
 
        function showUserInfo(userId) {
