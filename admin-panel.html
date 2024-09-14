@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-    <link rel="stylesheet" href="styles.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pannello Amministrativo - Smart TP</title>
@@ -118,12 +117,7 @@
         button:hover {
             opacity: 0.8;
         }
-        #addUserButton {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-        }
-        #addUserForm {
+        #addUserForm, #userInfoModal, #groupModal {
             display: none;
             position: fixed;
             top: 50%;
@@ -133,12 +127,31 @@
             padding: 20px;
             border-radius: 10px;
             z-index: 1000;
+            max-width: 80%;
+            max-height: 80%;
+            overflow-y: auto;
         }
-        #addUserForm input, #addUserForm select {
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
             display: block;
-            margin: 10px 0;
+            margin-bottom: 5px;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
             width: 100%;
-            padding: 5px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .checkbox-group {
+            margin-top: 10px;
+        }
+        .checkbox-group label {
+            display: block;
+            margin-bottom: 5px;
         }
         .landscape-warning {
             display: none;
@@ -167,7 +180,10 @@
     <div class="landscape-warning">
         <div>
             <p>Per favore, ruota il dispositivo in orizzontale</p>
-            <span style="font-size: 50px;">📱↻</span>
+            <svg viewBox="0 0 24 24" width="50" height="50">
+                <path d="M7 1L17 1A2 2 0 0 1 19 3V21A2 2 0 0 1 17 23H7A2 2 0 0 1 5 21V3A2 2 0 0 1 7 1zM7 4V20H17V4H7zM12 21A1 1 0 1 0 12 19 1 1 0 0 0 12 21z" fill="currentColor"/>
+                <path d="M10 10L14 14M14 10L10 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
         </div>
     </div>
 
@@ -184,15 +200,13 @@
     <div class="container">
         <h1>Pannello Amministrativo</h1>
         
-        <button id="addUserButton" onclick="showAddUserForm()">Aggiungi Utente</button>
+        <div class="tab">
+            <button class="tablinks" onclick="openTab(event, 'Users')">Gestione Utenti</button>
+            <button class="tablinks" onclick="openTab(event, 'Groups')">Gestione Gruppi</button>
+            <button class="tablinks" onclick="openTab(event, 'AddUser')">Aggiungi Utente</button>
+        </div>
 
-      <div class="tab">
-    <button class="tablinks" onclick="openTab(event, 'Users')">Gestione Utenti</button>
-    <button class="tablinks" onclick="openTab(event, 'Groups')">Gestione Gruppi</button>
-    <button class="tablinks" onclick="openTab(event, 'AddUser')">Aggiungi Utente</button>
-  </div>
-
-  <div id="Users" class="tabcontent">
+        <div id="Users" class="tabcontent">
             <h2>Gestione Utenti</h2>
             <table id="usersTable">
                 <thead>
@@ -211,33 +225,105 @@
 
         <div id="Groups" class="tabcontent">
             <h2>Gestione Gruppi</h2>
-            <!-- Contenuto per la gestione dei gruppi -->
+            <button onclick="showAddGroupForm()">Aggiungi Gruppo</button>
+            <table id="groupsTable">
+                <thead>
+                    <tr>
+                        <th>Nome Gruppo</th>
+                        <th>Descrizione</th>
+                        <th>Azioni</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- I gruppi verranno inseriti qui dinamicamente -->
+                </tbody>
+            </table>
+        </div>
+
+        <div id="AddUser" class="tabcontent">
+            <h3>Aggiungi Nuovo Utente</h3>
+            <form id="addUserForm">
+                <div class="form-group">
+                    <input type="text" id="newUsername" placeholder="Username" required>
+                </div>
+                <div class="form-group">
+                    <input type="email" id="newEmail" placeholder="Email" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="newPassword" placeholder="Password" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="newNome" placeholder="Nome" required>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="newCognome" placeholder="Cognome" required>
+                </div>
+                <div class="form-group">
+                    <select id="newDitta" required>
+                        <option value="Fart SA">Fart SA</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select id="newSettore" onchange="updateDepositoOptions()" required>
+                        <option value="Autolinee">Autolinee</option>
+                        <option value="Ferrovia">Ferrovia</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <select id="newDeposito" required>
+                        <!-- Opzioni verranno popolate dinamicamente -->
+                    </select>
+                </div>
+                <div class="form-group" id="newFunzioneAutolinee">
+                    <select id="newFunzioneAutolineeSelect">
+                        <option value="Autista">Autista</option>
+                    </select>
+                </div>
+                <div class="form-group" id="newFunzioneFerrovia" style="display:none;">
+                    <label><input type="checkbox" name="newFunzione" value="Capotreno"> Capotreno</label>
+                    <label><input type="checkbox" name="newFunzione" value="Macchinista"> Macchinista</label>
+                    <label><input type="checkbox" name="newFunzione" value="Autista"> Autista</label>
+                </div>
+                <div class="form-group">
+                    <input type="text" id="newMatricola" placeholder="Matricola" required>
+                </div>
+                <div class="form-group">
+                    <input type="date" id="newDataNascita" placeholder="Data di Nascita" required>
+                </div>
+                <div class="form-group">
+                    <input type="tel" id="newTelefono" placeholder="Telefono" required>
+                </div>
+                <div class="form-group">
+                    <select id="newRole" required>
+                        <option value="user">Utente</option>
+                        <option value="admin">Admin</option>
+                        <option value="superadmin">Superadmin</option>
+                    </select>
+                </div>
+                <button type="submit">Salva</button>
+                <button type="button" onclick="hideAddUserForm()">Annulla</button>
+            </form>
         </div>
     </div>
 
- <div id="AddUser" class="tabcontent">
-        <h3>Aggiungi Nuovo Utente</h3>
-        <form>
-            <input type="text" id="newUsername" placeholder="Username" required>
-            <input type="email" id="newEmail" placeholder="Email" required>
-            <input type="password" id="newPassword" placeholder="Password" required>
-            <input type="text" id="newNome" placeholder="Nome" required>
-            <input type="text" id="newCognome" placeholder="Cognome" required>
-            <input type="text" id="newDitta" placeholder="Ditta" required>
-            <input type="text" id="newSettore" placeholder="Settore">
-            <input type="text" id="newDeposito" placeholder="Deposito">
-            <input type="text" id="newFunzione" placeholder="Funzione">
-            <input type="text" id="newMatricola" placeholder="Matricola">
-            <input type="date" id="newDataNascita" placeholder="Data di Nascita">
-            <input type="tel" id="newTelefono" placeholder="Telefono">
-            <select id="newRole" required>
-                <option value="user">Utente</option>
-                <option value="admin">Admin</option>
-                <option value="superadmin">Superadmin</option>
-            </select>
-            <button type="submit" onclick="addUser(event)">Salva</button>
-            <button type="button" onclick="hideAddUserForm()">Annulla</button>
-        </form>
+    <div id="userInfoModal">
+        <h3>Informazioni Utente</h3>
+        <div id="userInfoContent"></div>
+        <div id="userGroupsCheckboxes"></div>
+        <textarea id="userNotes" placeholder="Note (solo per amministratori)"></textarea>
+        <button onclick="saveUserInfo()">Salva Modifiche</button>
+        <button onclick="closeUserInfoModal()">Chiudi</button>
+    </div>
+
+    <div id="groupModal">
+        <h3>Gestione Gruppo</h3>
+        <input type="text" id="groupName" placeholder="Nome Gruppo" required>
+        <textarea id="groupDescription" placeholder="Descrizione"></textarea>
+        <div id="groupPermissions">
+            <!-- Checkbox per le permissioni verranno generate dinamicamente -->
+        </div>
+        <button onclick="saveGroup()">Salva Gruppo</button>
+        <button onclick="closeGroupModal()">Annulla</button>
     </div>
 
     <script>
@@ -262,37 +348,37 @@
                     'Authorization': `Bearer ${token}`
                 }
             })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Accesso non autorizzato');
-                    }
-                    return response.json();
-                })
-                .then(users => {
-                    const tableBody = document.querySelector("#usersTable tbody");
-                    tableBody.innerHTML = '';
-                    users.forEach(user => {
-                        const row = `
-                            <tr>
-                                <td>${user.username}</td>
-                                <td>${user.email}</td>
-                                <td>${user.role}</td>
-                                <td>
-                                    <button onclick="showUserInfo(${user.id})">Info</button>
-                                    <button onclick="resetPassword(${user.id})">Resetta Password</button>
-                                    <button onclick="deleteUser(${user.id})">Elimina</button>
-                                </td>
-                            </tr>
-                        `;
-                        tableBody.innerHTML += row;
-                    });
-                })
-                .catch(error => {
-                    console.error('Errore nel caricamento degli utenti:', error);
-                    if (error.message === 'Accesso non autorizzato') {
-                        window.location.href = 'index.html';
-                    }
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Accesso non autorizzato');
+                }
+                return response.json();
+            })
+            .then(users => {
+                const tableBody = document.querySelector("#usersTable tbody");
+                tableBody.innerHTML = '';
+                users.forEach(user => {
+                    const row = `
+                        <tr>
+                            <td>${user.username}</td>
+                            <td>${user.email}</td>
+                            <td>${user.role}</td>
+                            <td>
+                                <button onclick="showUserInfo(${user.id})">Info</button>
+                                <button onclick="resetPassword(${user.id})">Resetta Password</button>
+                                <button onclick="deleteUser(${user.id})">Elimina</button>
+                            </td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
                 });
+            })
+            .catch(error => {
+                console.error('Errore nel caricamento degli utenti:', error);
+                if (error.message === 'Accesso non autorizzato') {
+                    window.location.href = 'index.html';
+                }
+            });
         }
 
         function showAddUserForm() {
@@ -315,7 +401,9 @@
                 ditta: document.getElementById('newDitta').value,
                 settore: document.getElementById('newSettore').value,
                 deposito: document.getElementById('newDeposito').value,
-                funzione: document.getElementById('newFunzione').value,
+                funzione: document.getElementById('newSettore').value === 'Autolinee'
+                    ? document.getElementById('newFunzioneAutolineeSelect').value
+                    : Array.from(document.querySelectorAll('input[name="newFunzione"]:checked')).map(cb => cb.value),
                 matricola: document.getElementById('newMatricola').value,
                 dataNascita: document.getElementById('newDataNascita').value,
                 telefono: document.getElementById('newTelefono').value,
@@ -347,7 +435,156 @@
         }
 
         function showUserInfo(userId) {
-            // Implementa la logica per mostrare le informazioni complete dell'utente
+            const token = localStorage.getItem('token');
+            fetch(`https://autisti.onrender.com/admin/users/${userId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => response.json())
+            .then(user => {
+                const userInfoContent = document.getElementById('userInfoContent');
+                userInfoContent.innerHTML = `
+                    <p><strong>Username:</strong> ${user.username}</p>
+                    <p><strong>Email:</strong> ${user.email}</p>
+                    <p><strong>Nome:</strong> <input type="text" id="editNome" value="${user.nome}"></p>
+                    <p><strong>Cognome:</strong> <input type="text" id="editCognome" value="${user.cognome}"></p>
+                    <p><strong>Ditta:</strong> <input type="text" id="editDitta" value="${user.ditta}" readonly></p>
+                    <p><strong>Settore:</strong> 
+                        <select id="editSettore" onchange="updateEditDepositoOptions()">
+                            <option value="Autolinee" ${user.settore === 'Autolinee' ? 'selected' : ''}>Autolinee</option>
+                            <option value="Ferrovia" ${user.settore === 'Ferrovia' ? 'selected' : ''}>Ferrovia</option>
+                        </select>
+                    </p>
+                    <p><strong>Deposito:</strong> 
+                        <select id="editDeposito"></select>
+                    </p>
+                    <p><strong>Funzione:</strong> 
+                        <div id="editFunzioneAutolinee" ${user.settore === 'Autolinee' ? '' : 'style="display:none;"'}>
+                            <select id="editFunzioneAutolineeSelect">
+                                <option value="Autista" ${user.funzione === 'Autista' ? 'selected' : ''}>Autista</option>
+                            </select>
+                        </div>
+                        <div id="editFunzioneFerrovia" ${user.settore === 'Ferrovia' ? '' : 'style="display:none;"'}>
+                            <label><input type="checkbox" name="editFunzione" value="Capotreno" ${user.funzione.includes('Capotreno') ? 'checked' : ''}> Capotreno</label>
+                            <label><input type="checkbox" name="editFunzione" value="Macchinista" ${user.funzione.includes('Macchinista') ? 'checked' : ''}> Macchinista</label>
+                            <label><input type="checkbox" name="editFunzione" value="Autista" ${user.funzione.includes('Autista') ? 'checked' : ''}> Autista</label>
+                        </div>
+                    </p>
+                    <p><strong>Matricola:</strong> <input type="text" id="editMatricola" value="${user.matricola}"></p>
+                    <p><strong>Data di Nascita:</strong> <input type="date" id="editDataNascita" value="${user.dataNascita}"></p>
+                    <p><strong>Telefono:</strong> <input type="tel" id="editTelefono" value="${user.telefono}"></p>
+                `;
+                document.getElementById('userNotes').value = user.note || '';
+                loadUserGroups(userId);
+                updateEditDepositoOptions();
+                document.getElementById('editDeposito').value = user.deposito;
+                document.getElementById('userInfoModal').style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Errore nel caricamento delle informazioni utente:', error);
+                alert('Errore nel caricamento delle informazioni utente');
+            });
+        }
+
+        function updateEditDepositoOptions() {
+            const settore = document.getElementById('editSettore').value;
+            const depositoSelect = document.getElementById('editDeposito');
+            depositoSelect.innerHTML = '';
+            if (settore === 'Autolinee') {
+                ['Bignasco', 'Locarno', 'Riazzino'].forEach(deposito => {
+                    const option = document.createElement('option');
+                    option.value = deposito;
+                    option.textContent = deposito;
+                    depositoSelect.appendChild(option);
+                });
+                document.getElementById('editFunzioneAutolinee').style.display = 'block';
+                document.getElementById('editFunzioneFerrovia').style.display = 'none';
+            } else if (settore === 'Ferrovia') {
+                const option = document.createElement('option');
+                option.value = 'Muralto';
+                option.textContent = 'Muralto';
+                depositoSelect.appendChild(option);
+                document.getElementById('editFunzioneAutolinee').style.display = 'none';
+                document.getElementById('editFunzioneFerrovia').style.display = 'block';
+            }
+        }
+
+        function loadUserGroups(userId) {
+            const token = localStorage.getItem('token');
+            fetch(`https://autisti.onrender.com/admin/user-groups/${userId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => response.json())
+            .then(groups => {
+                const userGroupsCheckboxes = document.getElementById('userGroupsCheckboxes');
+                userGroupsCheckboxes.innerHTML = '<h4>Gruppi:</h4>';
+                groups.forEach(group => {
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.id = `group-${group.id}`;
+                    checkbox.name = 'userGroups';
+                    checkbox.value = group.id;
+                    checkbox.checked = group.isMember;
+                    const label = document.createElement('label');
+                    label.htmlFor = `group-${group.id}`;
+                    label.textContent = group.name;
+                    userGroupsCheckboxes.appendChild(checkbox);
+                    userGroupsCheckboxes.appendChild(label);
+                    userGroupsCheckboxes.appendChild(document.createElement('br'));
+                });
+            })
+            .catch(error => {
+                console.error('Errore nel caricamento dei gruppi utente:', error);
+            });
+        }
+
+        function saveUserInfo() {
+            const userId = document.querySelector('#userInfoContent input').dataset.userId;
+            const userData = {
+                nome: document.getElementById('editNome').value,
+                cognome: document.getElementById('editCognome').value,
+                settore: document.getElementById('editSettore').value,
+                deposito: document.getElementById('editDeposito').value,
+                funzione: document.getElementById('editSettore').value === 'Autolinee' 
+                    ? document.getElementById('editFunzioneAutolineeSelect').value
+                    : Array.from(document.querySelectorAll('input[name="editFunzione"]:checked')).map(cb => cb.value),
+                matricola: document.getElementById('editMatricola').value,
+                dataNascita: document.getElementById('editDataNascita').value,
+                telefono: document.getElementById('editTelefono').value,
+                note: document.getElementById('userNotes').value,
+                groups: Array.from(document.querySelectorAll('input[name="userGroups"]:checked')).map(cb => cb.value)
+            };
+
+            const token = localStorage.getItem('token');
+            fetch(`https://autisti.onrender.com/admin/users/${userId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(userData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert('Informazioni utente aggiornate con successo');
+                    closeUserInfoModal();
+                    loadUsers();
+                } else {
+                    alert('Errore nell\'aggiornamento delle informazioni utente');
+                }
+            })
+            .catch(error => {
+                console.error('Errore:', error);
+                alert('Errore nell\'aggiornamento delle informazioni utente');
+            });
+        }
+
+        function closeUserInfoModal() {
+            document.getElementById('userInfoModal').style.display = 'none';
         }
 
         function resetPassword(userId) {
@@ -399,6 +636,197 @@
             }
         }
 
+        function showAddGroupForm() {
+            document.getElementById('groupModal').style.display = 'block';
+            loadPermissions();
+        }
+
+        function loadPermissions() {
+            const token = localStorage.getItem('token');
+            fetch('https://autisti.onrender.com/admin/permissions', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => response.json())
+            .then(permissions => {
+                const permissionsContainer = document.getElementById('groupPermissions');
+                permissionsContainer.innerHTML = '<h4>Permessi:</h4>';
+                permissions.forEach(permission => {
+                    const checkbox = document.createElement('input');
+                    checkbox.type = 'checkbox';
+                    checkbox.id = `permission-${permission.id}`;
+                    checkbox.name = 'groupPermissions';
+                    checkbox.value = permission.id;
+                    const label = document.createElement('label');
+                    label.htmlFor = `permission-${permission.id}`;
+                    label.textContent = permission.name;
+                    permissionsContainer.appendChild(checkbox);
+                    permissionsContainer.appendChild(label);
+                    permissionsContainer.appendChild(document.createElement('br'));
+                });
+            })
+            .catch(error => {
+                console.error('Errore nel caricamento dei permessi:', error);
+            });
+        }
+
+        function saveGroup() {
+            const groupData = {
+                name: document.getElementById('groupName').value,
+                description: document.getElementById('groupDescription').value,
+                permissions: Array.from(document.querySelectorAll('input[name="groupPermissions"]:checked')).map(cb => cb.value)
+            };
+
+            const token = localStorage.getItem('token');
+            fetch('https://autisti.onrender.com/admin/groups', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(groupData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.id) {
+                    alert('Gruppo creato con successo');
+                    closeGroupModal();
+                    loadGroups();
+                } else {
+                    alert('Errore nella creazione del gruppo');
+                }
+            })
+            .catch(error => {
+                console.error('Errore:', error);
+                alert('Errore nella creazione del gruppo');
+            });
+        }
+
+        function closeGroupModal() {
+            document.getElementById('groupModal').style.display = 'none';
+        }
+
+        function loadGroups() {
+            const token = localStorage.getItem('token');
+            fetch('https://autisti.onrender.com/admin/groups', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => response.json())
+            .then(groups => {
+                const tableBody = document.querySelector("#groupsTable tbody");
+                tableBody.innerHTML = '';
+                groups.forEach(group => {
+                    const row = `
+                        <tr>
+                            <td>${group.name}</td>
+                            <td>${group.description}</td>
+                            <td>
+                                <button onclick="editGroup(${group.id})">Modifica</button>
+                                <button onclick="deleteGroup(${group.id})">Elimina</button>
+                            </td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                });
+            })
+            .catch(error => {
+                console.error('Errore nel caricamento dei gruppi:', error);
+            });
+        }
+
+        function editGroup(groupId) {
+            const token = localStorage.getItem('token');
+            fetch(`https://autisti.onrender.com/admin/groups/${groupId}`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => response.json())
+            .then(group => {
+                document.getElementById('groupName').value = group.name;
+                document.getElementById('groupDescription').value = group.description;
+                loadPermissions();
+                setTimeout(() => {
+                    group.permissions.forEach(permissionId => {
+                        const checkbox = document.querySelector(`input[name="groupPermissions"][value="${permissionId}"]`);
+                        if (checkbox) checkbox.checked = true;
+                    });
+                }, 100);
+                document.getElementById('groupModal').style.display = 'block';
+            })
+            .catch(error => {
+                console.error('Errore nel caricamento del gruppo:', error);
+            });
+        }
+
+        function deleteGroup(groupId) {
+            if (confirm('Sei sicuro di voler eliminare questo gruppo?')) {
+                const token = localStorage.getItem('token');
+                fetch(`https://autisti.onrender.com/admin/groups/${groupId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert('Gruppo eliminato con successo');
+                        loadGroups();
+                    } else {
+                        alert('Errore nell\'eliminazione del gruppo');
+                    }
+                })
+                .catch(error => {
+                    console.error('Errore:', error);
+                    alert('Errore nell\'eliminazione del gruppo');
+                });
+            }
+        }
+
+        function updateDepositoOptions() {
+            const settore = document.getElementById('newSettore').value;
+            const depositoSelect = document.getElementById('newDeposito');
+            const funzioneAutolinee = document.getElementById('newFunzioneAutolinee');
+            const funzioneFerrovia = document.getElementById('newFunzioneFerrovia');
+
+            depositoSelect.innerHTML = '';
+            if (settore === 'Autolinee') {
+                ['Bignasco', 'Locarno', 'Riazzino'].forEach(deposito => {
+                    const option = document.createElement('option');
+                    option.value = deposito;
+                    option.textContent = deposito;
+                    depositoSelect.appendChild(option);
+                });
+                funzioneAutolinee.style.display = 'block';
+                funzioneFerrovia.style.display = 'none';
+            } else if (settore === 'Ferrovia') {
+                const option = document.createElement('option');
+                option.value = 'Muralto';
+                option.textContent = 'Muralto';
+                depositoSelect.appendChild(option);
+                funzioneAutolinee.style.display = 'none';
+                funzioneFerrovia.style.display = 'block';
+            }
+        }
+
+        // Gestione del menu
+        document.querySelector('.menu-icon').addEventListener('click', function() {
+            document.querySelector('.menu').classList.toggle('open');
+        });
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userRole');
+            window.location.href = 'index.html';
+        }
+
+        document.getElementById('logout').addEventListener('click', logout);
+
         // Implementazione del logout automatico
         let inactivityTimer;
 
@@ -407,28 +835,19 @@
             inactivityTimer = setTimeout(logout, 5 * 60 * 1000); // 5 minuti
         }
 
-        function logout() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('userRole');
-            window.location.href = 'index.html';
-        }
-
         // Resetta il timer su ogni interazione dell'utente
         ['click', 'touchstart', 'mousemove'].forEach(evt => 
             document.addEventListener(evt, resetInactivityTimer, false)
         );
 
-        // Gestione del menu
-        document.querySelector('.menu-icon').addEventListener('click', function() {
-            document.querySelector('.menu').classList.toggle('open');
-        });
-
-        document.getElementById('logout').addEventListener('click', logout);
-
-        // Carica gli utenti quando la pagina si apre
+        // Inizializzazione
         document.addEventListener('DOMContentLoaded', function() {
             openTab(event, 'Users');
             loadUsers();
+            loadGroups();
+            updateDepositoOptions();
+            document.getElementById('newSettore').addEventListener('change', updateDepositoOptions);
+            document.getElementById('addUserForm').addEventListener('submit', addUser);
             resetInactivityTimer();
         });
     </script>
