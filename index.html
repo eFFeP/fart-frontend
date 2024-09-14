@@ -113,9 +113,14 @@
             color: rgb(150,123,102);
             margin-top: 10px;
         }
-        @media (max-width: 600px) {
+        @media screen and (max-width: 768px) {
+            body {
+                align-items: flex-start;
+                padding-top: 10vh;
+            }
             .container {
-                width: 90%;
+                max-height: 90vh;
+                overflow-y: auto;
             }
         }
     </style>
@@ -238,9 +243,8 @@
                 if (response.ok) {
                     messageElement.textContent = translations[currentLang].loginSuccess;
                     localStorage.setItem('token', data.token);
-                    if (data.isFirstLogin) {
-                        alert('Per favore, cambia la tua password.');
-                    }
+                    localStorage.setItem('userRole', data.role);
+                    window.location.href = 'home.html';
                 } else {
                     messageElement.textContent = translations[currentLang].loginError;
                 }
@@ -262,7 +266,9 @@
                     body: JSON.stringify({ email }),
                 })
                 .then(response => response.json())
-                .then(data => alert(translations[currentLang].forgotPasswordSuccess))
+                .then(data => {
+                    alert(data.message);
+                })
                 .catch(error => {
                     console.error('Error:', error);
                     alert(translations[currentLang].forgotPasswordError);
