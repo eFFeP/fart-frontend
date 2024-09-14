@@ -434,58 +434,64 @@
             });
         }
 
-        function showUserInfo(userId) {
-            const token = localStorage.getItem('token');
-            fetch(`https://autisti.onrender.com/admin/users/${userId}`, {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            .then(response => response.json())
-            .then(user => {
-                const userInfoContent = document.getElementById('userInfoContent');
-                userInfoContent.innerHTML = `
-                    <p><strong>Username:</strong> ${user.username}</p>
-                    <p><strong>Email:</strong> ${user.email}</p>
-                    <p><strong>Nome:</strong> <input type="text" id="editNome" value="${user.nome}"></p>
-                    <p><strong>Cognome:</strong> <input type="text" id="editCognome" value="${user.cognome}"></p>
-                    <p><strong>Ditta:</strong> <input type="text" id="editDitta" value="${user.ditta}" readonly></p>
-                    <p><strong>Settore:</strong> 
-                        <select id="editSettore" onchange="updateEditDepositoOptions()">
-                            <option value="Autolinee" ${user.settore === 'Autolinee' ? 'selected' : ''}>Autolinee</option>
-                            <option value="Ferrovia" ${user.settore === 'Ferrovia' ? 'selected' : ''}>Ferrovia</option>
-                        </select>
-                    </p>
-                    <p><strong>Deposito:</strong> 
-                        <select id="editDeposito"></select>
-                    </p>
-                    <p><strong>Funzione:</strong> 
-                        <div id="editFunzioneAutolinee" ${user.settore === 'Autolinee' ? '' : 'style="display:none;"'}>
-                            <select id="editFunzioneAutolineeSelect">
-                                <option value="Autista" ${user.funzione === 'Autista' ? 'selected' : ''}>Autista</option>
-                            </select>
-                        </div>
-                        <div id="editFunzioneFerrovia" ${user.settore === 'Ferrovia' ? '' : 'style="display:none;"'}>
-                            <label><input type="checkbox" name="editFunzione" value="Capotreno" ${user.funzione.includes('Capotreno') ? 'checked' : ''}> Capotreno</label>
-                            <label><input type="checkbox" name="editFunzione" value="Macchinista" ${user.funzione.includes('Macchinista') ? 'checked' : ''}> Macchinista</label>
-                            <label><input type="checkbox" name="editFunzione" value="Autista" ${user.funzione.includes('Autista') ? 'checked' : ''}> Autista</label>
-                        </div>
-                    </p>
-                    <p><strong>Matricola:</strong> <input type="text" id="editMatricola" value="${user.matricola}"></p>
-                    <p><strong>Data di Nascita:</strong> <input type="date" id="editDataNascita" value="${user.dataNascita}"></p>
-                    <p><strong>Telefono:</strong> <input type="tel" id="editTelefono" value="${user.telefono}"></p>
-                `;
-                document.getElementById('userNotes').value = user.note || '';
-                loadUserGroups(userId);
-                updateEditDepositoOptions();
-                document.getElementById('editDeposito').value = user.deposito;
-                document.getElementById('userInfoModal').style.display = 'block';
-            })
-            .catch(error => {
-                console.error('Errore nel caricamento delle informazioni utente:', error);
-                alert('Errore nel caricamento delle informazioni utente');
-            });
+       function showUserInfo(userId) {
+    const token = localStorage.getItem('token');
+    fetch(`https://autisti.onrender.com/admin/users/${userId}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
         }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(user => {
+        console.log('User data:', user); // Per debugging
+        const userInfoContent = document.getElementById('userInfoContent');
+        userInfoContent.innerHTML = `
+            <p><strong>Username:</strong> ${user.username}</p>
+            <p><strong>Email:</strong> ${user.email}</p>
+            <p><strong>Nome:</strong> <input type="text" id="editNome" value="${user.nome || ''}"></p>
+            <p><strong>Cognome:</strong> <input type="text" id="editCognome" value="${user.cognome || ''}"></p>
+            <p><strong>Ditta:</strong> <input type="text" id="editDitta" value="${user.ditta || ''}" readonly></p>
+            <p><strong>Settore:</strong> 
+                <select id="editSettore" onchange="updateEditDepositoOptions()">
+                    <option value="Autolinee" ${user.settore === 'Autolinee' ? 'selected' : ''}>Autolinee</option>
+                    <option value="Ferrovia" ${user.settore === 'Ferrovia' ? 'selected' : ''}>Ferrovia</option>
+                </select>
+            </p>
+            <p><strong>Deposito:</strong> 
+                <select id="editDeposito"></select>
+            </p>
+            <p><strong>Funzione:</strong> 
+                <div id="editFunzioneAutolinee" ${user.settore === 'Autolinee' ? '' : 'style="display:none;"'}>
+                    <select id="editFunzioneAutolineeSelect">
+                        <option value="Autista" ${user.funzione === 'Autista' ? 'selected' : ''}>Autista</option>
+                    </select>
+                </div>
+                <div id="editFunzioneFerrovia" ${user.settore === 'Ferrovia' ? '' : 'style="display:none;"'}>
+                    <label><input type="checkbox" name="editFunzione" value="Capotreno" ${user.funzione && user.funzione.includes('Capotreno') ? 'checked' : ''}> Capotreno</label>
+                    <label><input type="checkbox" name="editFunzione" value="Macchinista" ${user.funzione && user.funzione.includes('Macchinista') ? 'checked' : ''}> Macchinista</label>
+                    <label><input type="checkbox" name="editFunzione" value="Autista" ${user.funzione && user.funzione.includes('Autista') ? 'checked' : ''}> Autista</label>
+                </div>
+            </p>
+            <p><strong>Matricola:</strong> <input type="text" id="editMatricola" value="${user.matricola || ''}"></p>
+            <p><strong>Data di Nascita:</strong> <input type="date" id="editDataNascita" value="${user.data_nascita || ''}"></p>
+            <p><strong>Telefono:</strong> <input type="tel" id="editTelefono" value="${user.telefono || ''}"></p>
+        `;
+        document.getElementById('userNotes').value = user.note || '';
+        loadUserGroups(userId);
+        updateEditDepositoOptions();
+        document.getElementById('editDeposito').value = user.deposito || '';
+        document.getElementById('userInfoModal').style.display = 'block';
+    })
+    .catch(error => {
+        console.error('Errore nel caricamento delle informazioni utente:', error);
+        alert('Errore nel caricamento delle informazioni utente: ' + error.message);
+    });
+}
 
         function updateEditDepositoOptions() {
             const settore = document.getElementById('editSettore').value;
