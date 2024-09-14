@@ -13,6 +13,7 @@
             background-image: url('sfondo01.jpg');
             background-size: cover;
             background-position: center;
+            color: rgb(115,89,74);
         }
         .container {
             max-width: 1200px;
@@ -21,8 +22,8 @@
             background-color: rgba(255, 255, 255, 0.8);
             border-radius: 10px;
         }
-        h1, h2 {
-            color: rgb(188,158,119);
+        h1, h2, h3 {
+            color: rgb(115,89,74);
         }
         .tab {
             overflow: hidden;
@@ -37,7 +38,7 @@
             cursor: pointer;
             padding: 14px 16px;
             transition: 0.3s;
-            color: rgb(188,158,119);
+            color: rgb(115,89,74);
         }
         .tab button:hover {
             background-color: #ddd;
@@ -59,7 +60,7 @@
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
-            color: rgb(188,158,119);
+            color: rgb(115,89,74);
         }
         th {
             background-color: #f2f2f2;
@@ -71,7 +72,14 @@
             cursor: pointer;
             z-index: 1000;
             font-size: 24px;
-            color: rgb(188,158,119);
+            color: rgb(115,89,74);
+            background-color: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .menu {
             position: fixed;
@@ -95,12 +103,73 @@
             margin-bottom: 10px;
         }
         .menu ul li a {
-            color: rgb(188,158,119);
+            color: rgb(115,89,74);
             text-decoration: none;
+        }
+        button {
+            background-color: rgb(115,89,74);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            opacity: 0.8;
+        }
+        #addUserButton {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+        #addUserForm {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 1000;
+        }
+        #addUserForm input, #addUserForm select {
+            display: block;
+            margin: 10px 0;
+            width: 100%;
+            padding: 5px;
+        }
+        .landscape-warning {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            color: white;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        @media screen and (max-width: 768px) and (orientation: portrait) {
+            .container {
+                display: none;
+            }
+            .landscape-warning {
+                display: flex;
+            }
         }
     </style>
 </head>
 <body>
+    <div class="landscape-warning">
+        <div>
+            <p>Per favore, ruota il dispositivo in orizzontale</p>
+            <span style="font-size: 50px;">📱↻</span>
+        </div>
+    </div>
+
     <div class="menu-icon">☰</div>
     <nav class="menu">
         <ul>
@@ -114,6 +183,8 @@
     <div class="container">
         <h1>Pannello Amministrativo</h1>
         
+        <button id="addUserButton" onclick="showAddUserForm()">Aggiungi Utente</button>
+
         <div class="tab">
             <button class="tablinks" onclick="openTab(event, 'Users')">Gestione Utenti</button>
             <button class="tablinks" onclick="openTab(event, 'Groups')">Gestione Gruppi</button>
@@ -134,13 +205,37 @@
                     <!-- Gli utenti verranno inseriti qui dinamicamente -->
                 </tbody>
             </table>
-            <button onclick="showAddUserForm()" style="margin-top: 20px; color: rgb(188,158,119);">Aggiungi Utente</button>
         </div>
 
         <div id="Groups" class="tabcontent">
             <h2>Gestione Gruppi</h2>
             <!-- Contenuto per la gestione dei gruppi -->
         </div>
+    </div>
+
+    <div id="addUserForm">
+        <h3>Aggiungi Nuovo Utente</h3>
+        <form>
+            <input type="text" id="newUsername" placeholder="Username" required>
+            <input type="email" id="newEmail" placeholder="Email" required>
+            <input type="password" id="newPassword" placeholder="Password" required>
+            <input type="text" id="newNome" placeholder="Nome" required>
+            <input type="text" id="newCognome" placeholder="Cognome" required>
+            <input type="text" id="newDitta" placeholder="Ditta" required>
+            <input type="text" id="newSettore" placeholder="Settore">
+            <input type="text" id="newDeposito" placeholder="Deposito">
+            <input type="text" id="newFunzione" placeholder="Funzione">
+            <input type="text" id="newMatricola" placeholder="Matricola">
+            <input type="date" id="newDataNascita" placeholder="Data di Nascita">
+            <input type="tel" id="newTelefono" placeholder="Telefono">
+            <select id="newRole" required>
+                <option value="user">Utente</option>
+                <option value="admin">Admin</option>
+                <option value="superadmin">Superadmin</option>
+            </select>
+            <button type="submit" onclick="addUser(event)">Salva</button>
+            <button type="button" onclick="hideAddUserForm()">Annulla</button>
+        </form>
     </div>
 
     <script>
@@ -181,8 +276,9 @@
                                 <td>${user.email}</td>
                                 <td>${user.role}</td>
                                 <td>
-                                    <button onclick="editUser(${user.id})">Modifica</button>
-                                    <button onclick="resetPassword(${user.id})">Reset Password</button>
+                                    <button onclick="showUserInfo(${user.id})">Info</button>
+                                    <button onclick="resetPassword(${user.id})">Resetta Password</button>
+                                    <button onclick="deleteUser(${user.id})">Elimina</button>
                                 </td>
                             </tr>
                         `;
@@ -198,38 +294,32 @@
         }
 
         function showAddUserForm() {
-            const formHtml = `
-                <h3>Aggiungi Nuovo Utente</h3>
-                <form id="addUserForm">
-                    <input type="text" id="newUsername" placeholder="Username" required>
-                    <input type="email" id="newEmail" placeholder="Email" required>
-                    <input type="password" id="newPassword" placeholder="Password" required>
-                    <select id="newRole">
-                        <option value="user">Utente</option>
-                        <option value="admin">Admin</option>
-                        <option value="superadmin">Superadmin</option>
-                    </select>
-                    <button type="submit">Crea Utente</button>
-                </form>
-            `;
-            const formContainer = document.createElement('div');
-            formContainer.innerHTML = formHtml;
-            document.getElementById('Users').appendChild(formContainer);
-
-            document.getElementById('addUserForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                const newUser = {
-                    username: document.getElementById('newUsername').value,
-                    email: document.getElementById('newEmail').value,
-                    password: document.getElementById('newPassword').value,
-                    role: document.getElementById('newRole').value
-                };
-                addUser(newUser);
-            });
+            document.getElementById('addUserForm').style.display = 'block';
         }
 
-        function addUser(userData) {
+        function hideAddUserForm() {
+            document.getElementById('addUserForm').style.display = 'none';
+        }
+
+        function addUser(event) {
+            event.preventDefault();
             const token = localStorage.getItem('token');
+            const userData = {
+                username: document.getElementById('newUsername').value,
+                email: document.getElementById('newEmail').value,
+                password: document.getElementById('newPassword').value,
+                nome: document.getElementById('newNome').value,
+                cognome: document.getElementById('newCognome').value,
+                ditta: document.getElementById('newDitta').value,
+                settore: document.getElementById('newSettore').value,
+                deposito: document.getElementById('newDeposito').value,
+                funzione: document.getElementById('newFunzione').value,
+                matricola: document.getElementById('newMatricola').value,
+                dataNascita: document.getElementById('newDataNascita').value,
+                telefono: document.getElementById('newTelefono').value,
+                role: document.getElementById('newRole').value
+            };
+
             fetch('https://autisti.onrender.com/admin/users', {
                 method: 'POST',
                 headers: {
@@ -242,7 +332,8 @@
             .then(data => {
                 if (data.id) {
                     alert('Utente creato con successo');
-                    loadUsers();  // Ricarica la lista degli utenti
+                    hideAddUserForm();
+                    loadUsers();
                 } else {
                     alert('Errore nella creazione dell\'utente');
                 }
@@ -253,12 +344,57 @@
             });
         }
 
-        function editUser(userId) {
-            // Implementa la logica per modificare un utente
+        function showUserInfo(userId) {
+            // Implementa la logica per mostrare le informazioni complete dell'utente
         }
 
         function resetPassword(userId) {
-            // Implementa la logica per resettare la password di un utente
+            if (confirm('Sei sicuro di voler resettare la password di questo utente?')) {
+                const token = localStorage.getItem('token');
+                fetch(`https://autisti.onrender.com/admin/users/${userId}/reset-password`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert('Password resettata con successo. L\'utente riceverà un\'email con le istruzioni.');
+                    } else {
+                        alert('Errore nel reset della password');
+                    }
+                })
+                .catch(error => {
+                    console.error('Errore:', error);
+                    alert('Errore nel reset della password');
+                });
+            }
+        }
+
+        function deleteUser(userId) {
+            if (confirm('Sei sicuro di voler eliminare questo utente?')) {
+                const token = localStorage.getItem('token');
+                fetch(`https://autisti.onrender.com/admin/users/${userId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message) {
+                        alert('Utente eliminato con successo');
+                        loadUsers();
+                    } else {
+                        alert('Errore nell\'eliminazione dell\'utente');
+                    }
+                })
+                .catch(error => {
+                    console.error('Errore:', error);
+                    alert('Errore nell\'eliminazione dell\'utente');
+                });
+            }
         }
 
         // Implementazione del logout automatico
