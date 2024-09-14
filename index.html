@@ -116,7 +116,7 @@
         @media screen and (max-width: 768px) {
             body {
                 align-items: flex-start;
-                padding-top: 10vh;
+                padding-top: 5vh;
             }
             .container {
                 max-height: 90vh;
@@ -267,7 +267,7 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    alert(data.message);
+                    alert(translations[currentLang].forgotPasswordSuccess);
                 })
                 .catch(error => {
                     console.error('Error:', error);
