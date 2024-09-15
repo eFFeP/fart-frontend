@@ -137,47 +137,47 @@
     }
 
     function loadUsers() {
-        const token = localStorage.getItem('token');
-        fetch('https://autisti.onrender.com/admin/users', {
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Accesso non autorizzato');
-            }
-            return response.json();
-        })
-        .then(users => {
-            const tableBody = document.querySelector("#usersTable tbody");
-            tableBody.innerHTML = '';
-            users.forEach((user, index) => {
-                const backgroundColor = index % 2 === 0 ? 'rgba(240, 240, 240, 0.7)' : 'rgba(255, 255, 255, 0.7)';
-                const rows = `
-                    <tr style="background-color: ${backgroundColor};">
-                        <td>${user.username}</td>
-                        <td>${user.email}</td>
-                        <td>${user.role}</td>
-                        <td rowspan="2">
-                            <button onclick="showUserInfo(${user.id})">Info</button>
-                            <button onclick="resetPassword(${user.id})">Resetta Password</button>
-                            <button onclick="deleteUser(${user.id})">Elimina</button>
-                        </td>
-                    </tr>
-                    <tr style="background-color: ${backgroundColor};">
-                        <td colspan="3"></td>
-                    </tr>
-                `;
-                tableBody.innerHTML += rows;
-            });
-        })
-        .catch(error => {
-            console.error('Errore nel caricamento degli utenti:', error);
-            if (error.message === 'Accesso non autorizzato') {
-                window.location.href = 'index.html';
-            }
+    const token = localStorage.getItem('token');
+    fetch('https://autisti.onrender.com/admin/users', {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Accesso non autorizzato');
+        }
+        return response.json();
+    })
+    .then(users => {
+        const tableBody = document.querySelector("#usersTable tbody");
+        tableBody.innerHTML = '';
+        users.forEach((user, index) => {
+            const backgroundColor = index % 2 === 0 ? 'rgba(115, 89, 74, 0.1)' : 'rgba(115, 89, 74, 0.2)';
+            const rows = `
+                <tr style="background-color: ${backgroundColor};">
+                    <td style="width: 200px; text-align: center;">${user.username}</td>
+                    <td style="width: 200px; text-align: center;">${user.email}</td>
+                    <td style="width: 200px; text-align: center;">${user.role}</td>
+                    <td rowspan="2" style="width: 200px; text-align: center; background-color: ${backgroundColor};">
+                        <button onclick="showUserInfo(${user.id})">Info</button>
+                        <button onclick="resetPassword(${user.id})">Resetta Password</button>
+                        <button onclick="deleteUser(${user.id})">Elimina</button>
+                    </td>
+                </tr>
+                <tr style="background-color: ${backgroundColor};">
+                    <td colspan="3" style="text-align: center;">Altri dettagli dell'utente possono essere inseriti qui</td>
+                </tr>
+            `;
+            tableBody.innerHTML += rows;
         });
+    })
+    .catch(error => {
+        console.error('Errore nel caricamento degli utenti:', error);
+        if (error.message === 'Accesso non autorizzato') {
+            window.location.href = 'index.html';
+        }
+    });
     }
 
     function loadGroups() {
