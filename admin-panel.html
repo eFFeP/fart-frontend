@@ -5,6 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pannello Amministrativo - Smart TP</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-image: url('sfondo01.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+    </style>
 </head>
 <body>
     <div class="landscape-warning">
@@ -74,7 +82,7 @@
         <div id="AddUser" class="tabcontent">
             <h3>Aggiungi Nuovo Utente</h3>
             <form id="addUserForm">
-                <!-- Form fields here -->
+                <!-- Inserisci qui i campi del form per aggiungere un nuovo utente -->
             </form>
         </div>
     </div>
@@ -104,25 +112,11 @@
     </div>
 
     <script>
-
-
-        
-    function toggleMenu() {
-        const menu = document.querySelector('.menu');
-        menu.classList.toggle('open');
-    }
-
-     document.addEventListener('DOMContentLoaded', function() {
-        const menuIcon = document.querySelector('.menu-icon');
-        if (menuIcon) {
-            menuIcon.addEventListener('click', toggleMenu);
+        function toggleMenu() {
+            const menu = document.getElementById('sideMenu');
+            menu.classList.toggle('open');
         }
 
-        // Event listener per l'icona del menu
-document.addEventListener('DOMContentLoaded', function() {
-        openTab(event, 'Users');
-        loadUsers();
-    });
         function openTab(evt, tabName) {
             var i, tabcontent, tablinks;
             tabcontent = document.getElementsByClassName("tabcontent");
@@ -135,14 +129,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             document.getElementById(tabName).style.display = "block";
             evt.currentTarget.className += " active";
-
-            if (tabName === 'Users') {
-                loadUsers();
-            } else if (tabName === 'Groups') {
-                loadGroups();
-            }
         }
 
+       
         function loadUsers() {
             const token = localStorage.getItem('token');
             fetch('https://autisti.onrender.com/admin/users', {
@@ -626,11 +615,9 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('logout').addEventListener('click', logout);
 
         // Inizializzazione
-        document.addEventListener('DOMContentLoaded', function() {
+ document.addEventListener('DOMContentLoaded', function() {
+            // Inizializzazione della pagina
             openTab(event, 'Users');
-            loadUsers();
-            updateDepositoOptions();
-            document.getElementById('newSettore').addEventListener('change', updateDepositoOptions);
         });
     </script>
 </body>
