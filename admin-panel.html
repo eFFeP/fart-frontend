@@ -112,103 +112,130 @@
     </div>
 
     <script>
-        function toggleMenu() {
-            const menu = document.getElementById('sideMenu');
-            menu.classList.toggle('open');
-        }
+    function toggleMenu() {
+        const menu = document.getElementById('sideMenu');
+        menu.classList.toggle('open');
+    }
 
-        function openTab(evt, tabName) {
-            var i, tabcontent, tablinks;
-            tabcontent = document.getElementsByClassName("tabcontent");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
+    function openTab(evt, tabName) {
+        var i, tabcontent, tablinks;
+        tabcontent = document.getElementsByClassName("tabcontent");
+        for (i = 0; i < tabcontent.length; i++) {
+            tabcontent[i].style.display = "none";
+        }
+        tablinks = document.getElementsByClassName("tablinks");
+        for (i = 0; i < tablinks.length; i++) {
+            tablinks[i].className = tablinks[i].className.replace(" active", "");
+        }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.className += " active";
+        if (tabName === 'Users') {
+            loadUsers();
+        } else if (tabName === 'Groups') {
+            loadGroups();
+        }
+    }
+
+    function loadUsers() {
+        const token = localStorage.getItem('token');
+        fetch('https://autisti.onrender.com/admin/users', {
+            headers: {
+                'Authorization': `Bearer ${token}`
             }
-            tablinks = document.getElementsByClassName("tablinks");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Accesso non autorizzato');
             }
-            document.getElementById(tabName).style.display = "block";
-            evt.currentTarget.className += " active";
-
-            if (tabName === 'Users') {
-                loadUsers();
-            } else if (tabName === 'Groups') {
-                loadGroups();
+            return response.json();
+        })
+        .then(users => {
+            const tableBody = document.querySelector("#usersTable tbody");
+            tableBody.innerHTML = '';
+            users.forEach((user, index) => {
+                const backgroundColor = index % 2 === 0 ? 'rgba(240, 240, 240, 0.7)' : 'rgba(255, 255, 255, 0.7)';
+                const rows = `
+                    <tr style="background-color: ${backgroundColor};">
+                        <td>${user.username}</td>
+                        <td>${user.email}</td>
+                        <td>${user.role}</td>
+                        <td rowspan="2">
+                            <button onclick="showUserInfo(${user.id})">Info</button>
+                            <button onclick="resetPassword(${user.id})">Resetta Password</button>
+                            <button onclick="deleteUser(${user.id})">Elimina</button>
+                        </td>
+                    </tr>
+                    <tr style="background-color: ${backgroundColor};">
+                        <td colspan="3">Altri dettagli dell'utente possono essere inseriti qui</td>
+                    </tr>
+                `;
+                tableBody.innerHTML += rows;
+            });
+        })
+        .catch(error => {
+            console.error('Errore nel caricamento degli utenti:', error);
+            if (error.message === 'Accesso non autorizzato') {
+                window.location.href = 'index.html';
             }
-        }
-
-        function loadUsers() {
-            // Implementa la logica per caricare gli utenti
-            console.log('Caricamento utenti...');
-        }
-
-        function loadUsers() {
-    const token = localStorage.getItem('token');
-    fetch('https://autisti.onrender.com/admin/users', {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Accesso non autorizzato');
-        }
-        return response.json();
-    })
-    .then(users => {
-        const tableBody = document.querySelector("#usersTable tbody");
-        tableBody.innerHTML = '';
-        users.forEach(user => {
-            const row = `
-                <tr>
-                    <td>${user.username}</td>
-                    <td>${user.email}</td>
-                    <td>${user.role}</td>
-                    <td>
-                        <button onclick="showUserInfo(${user.id})">Info</button>
-                        <button onclick="resetPassword(${user.id})">Resetta Password</button>
-                        <button onclick="deleteUser(${user.id})">Elimina</button>
-                    </td>
-                </tr>
-            `;
-            tableBody.innerHTML += row;
         });
-    })
-    .catch(error => {
-        console.error('Errore nel caricamento degli utenti:', error);
-        if (error.message === 'Accesso non autorizzato') {
-            window.location.href = 'index.html';
+    }
+
+    function loadGroups() {
+        // Implementa la logica per caricare i gruppi
+        console.log('Caricamento gruppi...');
+    }
+
+    function showAddGroupForm() {
+        // Implementa la logica per mostrare il form di aggiunta gruppo
+        console.log('Mostra form aggiungi gruppo');
+    }
+
+    function saveUserInfo() {
+        // Implementa la logica per salvare le informazioni utente
+        console.log('Salvataggio informazioni utente...');
+    }
+
+    function closeUserInfoModal() {
+        document.getElementById('userInfoModal').style.display = 'none';
+    }
+
+    function saveGroup() {
+        // Implementa la logica per salvare il gruppo
+        console.log('Salvataggio gruppo...');
+    }
+
+    function closeGroupModal() {
+        document.getElementById('groupModal').style.display = 'none';
+    }
+
+    function logout() {
+        localStorage.removeItem('token');
+        window.location.href = 'index.html';
+    }
+
+    let inactivityTimer;
+
+    function resetInactivityTimer() {
+        clearTimeout(inactivityTimer);
+        inactivityTimer = setTimeout(logout, 10 * 60 * 1000); // 10 minuti
+    }
+
+    // Resetta il timer su ogni interazione dell'utente
+    ['click', 'touchstart', 'mousemove'].forEach(evt => 
+        document.addEventListener(evt, resetInactivityTimer, false)
+    );
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inizializzazione della pagina
+        openTab(event, 'Users');
+        resetInactivityTimer();
+
+        // Aggiungi l'event listener per il pulsante di logout
+        const logoutButton = document.getElementById('logout');
+        if (logoutButton) {
+            logoutButton.addEventListener('click', logout);
         }
     });
-}
-
-        function showAddGroupForm() {
-            // Implementa la logica per mostrare il form di aggiunta gruppo
-            console.log('Mostra form aggiungi gruppo');
-        }
-
-        function saveUserInfo() {
-            // Implementa la logica per salvare le informazioni utente
-            console.log('Salvataggio informazioni utente...');
-        }
-
-        function closeUserInfoModal() {
-            document.getElementById('userInfoModal').style.display = 'none';
-        }
-
-        function saveGroup() {
-            // Implementa la logica per salvare il gruppo
-            console.log('Salvataggio gruppo...');
-        }
-
-        function closeGroupModal() {
-            document.getElementById('groupModal').style.display = 'none';
-        }
-
-        document.addEventListener('DOMContentLoaded', function() {
-            // Inizializzazione della pagina
-            openTab(event, 'Users');
-        });
-    </script>
+</script>
 </body>
 </html>
