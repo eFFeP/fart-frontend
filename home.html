@@ -5,18 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home - Smart TP</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        body {
-            background-image: url('sfondo01.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }
-    </style>
 </head>
 <body>
     <div class="menu-icon" onclick="toggleMenu()">☰</div>
-
+    
     <nav class="menu" id="sideMenu">
         <ul>
             <li><a href="#">Home</a></li>
@@ -28,7 +20,6 @@
 
     <div class="container">
         <h1>Benvenuto in Smart TP</h1>
-        <!-- Altro contenuto della home page -->
     </div>
 
     <script>
@@ -36,6 +27,13 @@
             const menu = document.getElementById('sideMenu');
             menu.classList.toggle('open');
         }
+
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = 'index.html';
+        }
+
+        document.getElementById('logout').addEventListener('click', logout);
     </script>
 </body>
 </html>
