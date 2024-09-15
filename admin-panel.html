@@ -215,11 +215,62 @@ function updateBetaGroup(userId, group, isChecked) {
         // Implementa la logica per mostrare il form di aggiunta gruppo
         console.log('Mostra form aggiungi gruppo');
     }
+function showUserInfo(userId) {
+    const token = localStorage.getItem('token');
+    fetch(`https://autisti.onrender.com/admin/users/${userId}`, {
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    .then(response => response.json())
+    .then(user => {
+        const userInfoContent = document.getElementById('userInfoContent');
+        userInfoContent.innerHTML = `
+            <p><strong>Username:</strong> <input type="text" id="editUsername" value="${user.username}"></p>
+            <p><strong>Email:</strong> <input type="email" id="editEmail" value="${user.email}"></p>
+            <p><strong>Ruolo:</strong> 
+                <select id="editRole">
+                    <option value="user" ${user.role === 'user' ? 'selected' : ''}>Utente</option>
+                    <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Admin</option>
+                    <option value="superadmin" ${user.role === 'superadmin' ? 'selected' : ''}>Superadmin</option>
+                </select>
+            </p>
+            <!-- Aggiungi qui altri campi del database -->
+        `;
+        document.getElementById('userInfoModal').style.display = 'block';
+    })
+    .catch(error => {
+        console.error('Errore nel caricamento delle informazioni utente:', error);
+    });
+}
+    function saveUserInfo(userId) {
+    const token = localStorage.getItem('token');
+    const userData = {
+        username: document.getElementById('editUsername').value,
+        email: document.getElementById('editEmail').value,
+        role: document.getElementById('editRole').value,
+        // Aggiungi qui altri campi modificati
+    };
 
-    function saveUserInfo() {
-        // Implementa la logica per salvare le informazioni utente
-        console.log('Salvataggio informazioni utente...');
-    }
+    fetch(`https://autisti.onrender.com/admin/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(userData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Informazioni utente aggiornate con successo');
+        document.getElementById('userInfoModal').style.display = 'none';
+        loadUsers(); // Ricarica la lista degli utenti
+    })
+    .catch(error => {
+        console.error('Errore nell\'aggiornamento delle informazioni utente:', error);
+        alert('Errore nell\'aggiornamento delle informazioni utente');
+    });
+}
 
     function closeUserInfoModal() {
         document.getElementById('userInfoModal').style.display = 'none';
