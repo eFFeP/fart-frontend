@@ -5,14 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pannello Amministrativo - Smart TP</title>
     <link rel="stylesheet" href="styles.css">
-    <style>
-        body {
-            background-image: url('sfondo01.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }
-    </style>
 </head>
 <body>
     <div class="landscape-warning">
@@ -26,7 +18,7 @@
     </div>
 
     <div class="menu-icon" onclick="toggleMenu()">☰</div>
-
+    
     <nav class="menu" id="sideMenu">
         <ul>
             <li><a href="home.html">Home</a></li>
@@ -112,6 +104,17 @@
     </div>
 
     <script>
+   // Verifica l'accesso dell'utente
+        function checkAccess() {
+            const token = localStorage.getItem('token');
+            const userRole = localStorage.getItem('userRole');
+            if (!token || (userRole !== 'admin' && userRole !== 'superadmin')) {
+                window.location.href = 'index.html';
+            }
+        } 
+        // Chiamata alla funzione di verifica all'avvio della pagina
+        document.addEventListener('DOMContentLoaded', checkAccess);
+        
 function addUser(event) {
     event.preventDefault();
     const token = localStorage.getItem('token');
