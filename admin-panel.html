@@ -257,7 +257,13 @@ function toggleMenu() {
             const menu = document.getElementById('sideMenu');
             menu.classList.toggle('open');
         }
-        
+        // Event listener per l'icona del menu
+    document.addEventListener('DOMContentLoaded', function() {
+        const menuIcon = document.querySelector('.menu-icon');
+        if (menuIcon) {
+            menuIcon.addEventListener('click', toggleMenu);
+        }
+    });
         function openTab(evt, tabName) {
             var i, tabcontent, tablinks;
             tabcontent = document.getElementsByClassName("tabcontent");
