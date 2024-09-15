@@ -15,20 +15,19 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Benvenuto in Smart TP</h1>
-    </div>
-    
-    <div class="menu-icon">☰</div>
-    <nav class="menu">
+    <div class="menu-icon" onclick="toggleMenu()">☰</div>
+
+    <nav class="menu" id="sideMenu">
         <ul>
             <li><a href="#">Home</a></li>
             <li><a href="#">Profilo</a></li>
-            <li id="adminPanel" style="display: none;"><a href="admin-panel.html">Pannello Amministrativo</a></li>
+            <li><a href="admin-panel.html">Pannello Amministrativo</a></li>
             <li><a href="#" id="logout">Logout</a></li>
         </ul>
     </nav>
 
+    <div class="container">
+        <h1>Benvenuto in Smart TP</h1>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const menuIcon = document.querySelector('.menu-icon');
@@ -39,6 +38,11 @@
             menuIcon.addEventListener('click', function() {
                 menu.classList.toggle('open');
             });
+
+               function toggleMenu() {
+            const menu = document.getElementById('sideMenu');
+            menu.classList.toggle('open');
+        }
 
             // Controlla il ruolo dell'utente
             const userRole = localStorage.getItem('userRole');
