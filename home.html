@@ -56,20 +56,34 @@
                 inactivityTimer = setTimeout(logout, 5 * 60 * 1000); // 5 minuti
             }
 
-            function logout() {
-                localStorage.removeItem('token');
-                localStorage.removeItem('userRole');
-                window.location.href = 'index.html';
-            }
+             function logout() {
+        localStorage.removeItem('token');
+        window.location.href = 'index.html';
+    }
 
-            // Resetta il timer su ogni interazione dell'utente
-            ['click', 'touchstart', 'mousemove'].forEach(evt => 
-                document.addEventListener(evt, resetInactivityTimer, false)
-            );
+    let inactivityTimer;
 
-            // Avvia il timer quando la pagina si carica
-            resetInactivityTimer();
-        });
+    function resetInactivityTimer() {
+        clearTimeout(inactivityTimer);
+        inactivityTimer = setTimeout(logout, 10 * 60 * 1000); // 10 minuti
+    }
+
+    // Resetta il timer su ogni interazione dell'utente
+    ['click', 'touchstart', 'mousemove'].forEach(evt => 
+        document.addEventListener(evt, resetInactivityTimer, false)
+    );
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inizializzazione della pagina
+        openTab(event, 'Users');
+        resetInactivityTimer();
+
+        // Aggiungi l'event listener per il pulsante di logout
+        const logoutButton = document.getElementById('logout');
+        if (logoutButton) {
+            logoutButton.addEventListener('click', logout);
+        }
+    });
     </script>
 </body>
 </html>
