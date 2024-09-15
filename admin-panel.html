@@ -241,8 +241,23 @@
             <button onclick="closeGroupModal()">Annulla</button>
         </div>
     </div>
+       <div class="menu-icon" onclick="toggleMenu()">☰</div>
+
+    <nav class="menu" id="sideMenu">
+        <ul>
+            <li><a href="home.html">Home</a></li>
+            <li><a href="#">Profilo</a></li>
+            <li><a href="admin-panel.html">Pannello Amministrativo</a></li>
+            <li><a href="#" id="logout">Logout</a></li>
+        </ul>
+    </nav>
 
     <script>
+function toggleMenu() {
+            const menu = document.getElementById('sideMenu');
+            menu.classList.toggle('open');
+        }
+        
         function openTab(evt, tabName) {
             var i, tabcontent, tablinks;
             tabcontent = document.getElementsByClassName("tabcontent");
