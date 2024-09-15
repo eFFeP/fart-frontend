@@ -268,7 +268,15 @@ function showUserInfo(userId) {
                     <option value="superadmin" ${user.role === 'superadmin' ? 'selected' : ''}>Superadmin</option>
                 </select>
             </p>
-            <!-- Aggiungi qui altri campi del database -->
+            <p><strong>Cognome:</strong> <input type="text" id="editCognome" value="${user.cognome || ''}"></p>
+            <p><strong>Nome:</strong> <input type="text" id="editNome" value="${user.nome || ''}"></p>
+            <p><strong>Ditta:</strong> <input type="text" id="editDitta" value="${user.ditta || ''}"></p>
+            <p><strong>Settore:</strong> <input type="text" id="editSettore" value="${user.settore || ''}"></p>
+            <p><strong>Deposito:</strong> <input type="text" id="editDeposito" value="${user.deposito || ''}"></p>
+            <p><strong>Funzione:</strong> <input type="text" id="editFunzione" value="${user.funzione || ''}"></p>
+            <p><strong>Matricola:</strong> <input type="text" id="editMatricola" value="${user.matricola || ''}"></p>
+            <p><strong>Data di Nascita:</strong> <input type="date" id="editDataNascita" value="${user.data_nascita || ''}"></p>
+            <p><strong>Telefono:</strong> <input type="tel" id="editTelefono" value="${user.telefono || ''}"></p>
         `;
         document.getElementById('userInfoModal').style.display = 'block';
     })
