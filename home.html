@@ -13,7 +13,7 @@
         <ul>
             <li><a href="#">Home</a></li>
             <li><a href="#">Profilo</a></li>
-            <li><a href="admin-panel.html">Pannello Amministrativo</a></li>
+             <li id="adminPanelLink" style="display: none;"><a href="admin-panel.html">Pannello Amministrativo</a></li>
             <li><a href="#" id="logout">Logout</a></li>
         </ul>
     </nav>
@@ -29,10 +29,12 @@
             menu.classList.toggle('open');
         }
 
-        function logout() {
+         function logout() {
             localStorage.removeItem('token');
             window.location.href = 'index.html';
         }
+
+        document.getElementById('logout').addEventListener('click', logout);
 
         let inactivityTimer;
 
@@ -47,7 +49,7 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             resetInactivityTimer();
-            document.getElementById('logout').addEventListener('click', logout);
+          
         });
         function loadUserInfo() {
             const token = localStorage.getItem('token');
@@ -60,6 +62,10 @@
             .then(user => {
                 document.getElementById('welcomeMessage').textContent = `Benvenuto ${user.username}`;
                 document.getElementById('userDetails').textContent = `${user.ditta} - ${user.settore.charAt(0).toUpperCase()}${user.matricola} - ${user.deposito}`;
+           // Mostra il link al pannello amministrativo solo per admin e superadmin
+                if (user.role === 'admin' || user.role === 'superadmin') {
+                    document.getElementById('adminPanelLink').style.display = 'block';
+                }
             })
             .catch(error => {
                 console.error('Errore nel caricamento delle informazioni utente:', error);
