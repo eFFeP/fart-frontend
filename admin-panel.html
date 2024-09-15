@@ -182,7 +182,30 @@
         }
     });
 }
-
+function updateBetaGroup(userId, group, isChecked) {
+    const token = localStorage.getItem('token');
+    fetch(`https://autisti.onrender.com/admin/users/${userId}/beta`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ group, isChecked })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Errore nell\'aggiornamento del gruppo beta');
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Gruppo beta aggiornato con successo');
+    })
+    .catch(error => {
+        console.error('Errore:', error);
+        alert('Errore nell\'aggiornamento del gruppo beta');
+    });
+}
     function loadGroups() {
         // Implementa la logica per caricare i gruppi
         console.log('Caricamento gruppi...');
