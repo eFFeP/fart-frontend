@@ -112,6 +112,53 @@
     </div>
 
     <script>
+function addUser(event) {
+    event.preventDefault();
+    const token = localStorage.getItem('token');
+    const userData = {
+        username: document.getElementById('newUsername').value,
+        email: document.getElementById('newEmail').value,
+        password: document.getElementById('newPassword').value,
+        nome: document.getElementById('newNome').value,
+        cognome: document.getElementById('newCognome').value,
+        ditta: document.getElementById('newDitta').value,
+        settore: document.getElementById('newSettore').value,
+        deposito: document.getElementById('newDeposito').value,
+        funzione: document.getElementById('newSettore').value === 'Autolinee'
+            ? document.getElementById('newFunzioneAutolineeSelect').value
+            : Array.from(document.querySelectorAll('input[name="newFunzione"]:checked')).map(cb => cb.value).join(', '),
+        matricola: document.getElementById('newMatricola').value,
+        dataNascita: document.getElementById('newDataNascita').value,
+        telefono: document.getElementById('newTelefono').value,
+        role: document.getElementById('newRole').value
+    };
+
+    fetch('https://autisti.onrender.com/admin/users', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(userData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.id) {
+            alert('Utente creato con successo');
+            document.getElementById('addUserForm').reset();
+            loadUsers();
+        } else {
+            alert('Errore nella creazione dell\'utente');
+        }
+    })
+    .catch(error => {
+        console.error('Errore:', error);
+        alert('Errore nella creazione dell\'utente');
+    });
+}
+
+
+        
     function toggleMenu() {
         const menu = document.getElementById('sideMenu');
         menu.classList.toggle('open');
@@ -157,7 +204,8 @@
             const backgroundColor = index % 2 === 0 ? 'rgba(115, 89, 74, 0.1)' : 'rgba(115, 89, 74, 0.2)';
             const rows = `
                 <tr style="background-color: ${backgroundColor};">
-                    <td rowspan="2">${user.username}</td>
+                    <td rowspan="2">${user.cognome}</td>
+                    <td rowspan="2">${user.nome}</td>
                     <td rowspan="2">${user.email}</td>
                     <td rowspan="2">${user.role}</td>
                     <td>
@@ -175,7 +223,6 @@
             `;
             tableBody.innerHTML += rows;
         });
-
         // Aggiorna i controlli di paginazione
         updatePaginationControls(currentPage, totalPages);
     })
