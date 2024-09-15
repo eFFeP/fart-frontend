@@ -136,9 +136,9 @@
         }
     }
 
-    function loadUsers() {
+    function loadUsers(page = 1) {
     const token = localStorage.getItem('token');
-    fetch('https://autisti.onrender.com/admin/users', {
+    fetch(`https://autisti.onrender.com/admin/users?page=${page}&limit=15`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }
@@ -149,7 +149,8 @@
         }
         return response.json();
     })
-    .then(users => {
+    .then(data => {
+        const { users, totalPages, currentPage } = data;
         const tableBody = document.querySelector("#usersTable tbody");
         tableBody.innerHTML = '';
         users.forEach((user, index) => {
@@ -174,6 +175,9 @@
             `;
             tableBody.innerHTML += rows;
         });
+
+        // Aggiorna i controlli di paginazione
+        updatePaginationControls(currentPage, totalPages);
     })
     .catch(error => {
         console.error('Errore nel caricamento degli utenti:', error);
@@ -181,6 +185,35 @@
             window.location.href = 'index.html';
         }
     });
+}
+
+function updatePaginationControls(currentPage, totalPages) {
+    const paginationControls = document.querySelector('.pagination') || document.createElement('div');
+    paginationControls.className = 'pagination';
+    paginationControls.innerHTML = '';
+
+    if (currentPage > 1) {
+        paginationControls.innerHTML += `<button onclick="loadUsers(${currentPage - 1})">←</button>`;
+    }
+
+    if (currentPage > 1) {
+        paginationControls.innerHTML += `<button onclick="loadUsers(${currentPage - 1})">${currentPage - 1}</button>`;
+    }
+
+    paginationControls.innerHTML += `<button class="active">${currentPage}</button>`;
+
+    if (currentPage < totalPages) {
+        paginationControls.innerHTML += `<button onclick="loadUsers(${currentPage + 1})">${currentPage + 1}</button>`;
+    }
+
+    if (currentPage < totalPages) {
+        paginationControls.innerHTML += `<button onclick="loadUsers(${currentPage + 1})">→</button>`;
+    }
+
+    const tableContainer = document.querySelector('#Users');
+    if (!document.querySelector('.pagination')) {
+        tableContainer.appendChild(paginationControls);
+    }
 }
 function updateBetaGroup(userId, group, isChecked) {
     const token = localStorage.getItem('token');
