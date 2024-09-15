@@ -306,24 +306,36 @@ function showUserInfo(userId) {
     .then(user => {
         const userInfoContent = document.getElementById('userInfoContent');
         userInfoContent.innerHTML = `
-            <p><strong>Username:</strong> <input type="text" id="editUsername" value="${user.username}"></p>
-            <p><strong>Email:</strong> <input type="email" id="editEmail" value="${user.email}"></p>
-            <p><strong>Ruolo:</strong> 
-                <select id="editRole">
-                    <option value="user" ${user.role === 'user' ? 'selected' : ''}>Utente</option>
-                    <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Admin</option>
-                    <option value="superadmin" ${user.role === 'superadmin' ? 'selected' : ''}>Superadmin</option>
-                </select>
-            </p>
-            <p><strong>Cognome:</strong> <input type="text" id="editCognome" value="${user.cognome || ''}"></p>
-            <p><strong>Nome:</strong> <input type="text" id="editNome" value="${user.nome || ''}"></p>
-            <p><strong>Ditta:</strong> <input type="text" id="editDitta" value="${user.ditta || ''}"></p>
-            <p><strong>Settore:</strong> <input type="text" id="editSettore" value="${user.settore || ''}"></p>
-            <p><strong>Deposito:</strong> <input type="text" id="editDeposito" value="${user.deposito || ''}"></p>
-            <p><strong>Funzione:</strong> <input type="text" id="editFunzione" value="${user.funzione || ''}"></p>
-            <p><strong>Matricola:</strong> <input type="text" id="editMatricola" value="${user.matricola || ''}"></p>
-            <p><strong>Data di Nascita:</strong> <input type="date" id="editDataNascita" value="${user.data_nascita || ''}"></p>
-            <p><strong>Telefono:</strong> <input type="tel" id="editTelefono" value="${user.telefono || ''}"></p>
+            <div style="display: flex; justify-content: space-between;">
+                <div style="width: 48%;">
+                    <p><strong>Username:</strong> <input type="text" id="editUsername" value="${user.username}"></p>
+                    <p><strong>Email:</strong> <input type="email" id="editEmail" value="${user.email}"></p>
+                    <p><strong>Ruolo:</strong> 
+                        <select id="editRole">
+                            <option value="user" ${user.role === 'user' ? 'selected' : ''}>Utente</option>
+                            <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Admin</option>
+                            <option value="superadmin" ${user.role === 'superadmin' ? 'selected' : ''}>Superadmin</option>
+                        </select>
+                    </p>
+                    <p><strong>Cognome:</strong> <input type="text" id="editCognome" value="${user.cognome || ''}"></p>
+                    <p><strong>Nome:</strong> <input type="text" id="editNome" value="${user.nome || ''}"></p>
+                    <p><strong>Ditta:</strong> <input type="text" id="editDitta" value="${user.ditta || ''}"></p>
+                </div>
+                <div style="width: 48%;">
+                    <p><strong>Settore:</strong> <input type="text" id="editSettore" value="${user.settore || ''}"></p>
+                    <p><strong>Deposito:</strong> <input type="text" id="editDeposito" value="${user.deposito || ''}"></p>
+                    <p><strong>Funzione:</strong> <input type="text" id="editFunzione" value="${user.funzione || ''}"></p>
+                    <p><strong>Matricola:</strong> <input type="text" id="editMatricola" value="${user.matricola || ''}"></p>
+                    <p><strong>Data di Nascita:</strong> <input type="date" id="editDataNascita" value="${user.data_nascita || ''}"></p>
+                    <p><strong>Telefono:</strong> <input type="tel" id="editTelefono" value="${user.telefono || ''}"></p>
+                </div>
+            </div>
+            <p><strong>Note:</strong></p>
+            <textarea id="userNotes" style="width: 100%; height: 100px;">${user.note || ''}</textarea>
+            <div style="margin-top: 20px; text-align: right;">
+                <button onclick="saveUserInfo(${user.id})" style="margin-right: 10px;">Salva</button>
+                <button onclick="closeUserInfoModal()">Esci</button>
+            </div>
         `;
         document.getElementById('userInfoModal').style.display = 'block';
     })
@@ -337,27 +349,44 @@ function showUserInfo(userId) {
         username: document.getElementById('editUsername').value,
         email: document.getElementById('editEmail').value,
         role: document.getElementById('editRole').value,
-        // Aggiungi qui altri campi modificati
+        cognome: document.getElementById('editCognome').value,
+        nome: document.getElementById('editNome').value,
+        ditta: document.getElementById('editDitta').value,
+        settore: document.getElementById('editSettore').value,
+        deposito: document.getElementById('editDeposito').value,
+        funzione: document.getElementById('editFunzione').value,
+        matricola: document.getElementById('editMatricola').value,
+        dataNascita: document.getElementById('editDataNascita').value,
+        telefono: document.getElementById('editTelefono').value,
+        note: document.getElementById('userNotes').value
     };
 
     fetch(`https://autisti.onrender.com/admin/users/${userId}`, {
         method: 'PUT',
         headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(userData)
     })
     .then(response => response.json())
     .then(data => {
-        alert('Informazioni utente aggiornate con successo');
-        document.getElementById('userInfoModal').style.display = 'none';
-        loadUsers(); // Ricarica la lista degli utenti
+        if (data.id) {
+            alert('Informazioni utente aggiornate con successo');
+            closeUserInfoModal();
+            loadUsers(); // Ricarica la lista degli utenti
+        } else {
+            alert('Errore nell\'aggiornamento delle informazioni utente');
+        }
     })
     .catch(error => {
-        console.error('Errore nell\'aggiornamento delle informazioni utente:', error);
+        console.error('Errore:', error);
         alert('Errore nell\'aggiornamento delle informazioni utente');
     });
+}
+
+function closeUserInfoModal() {
+    document.getElementById('userInfoModal').style.display = 'none';
 }
 
     function closeUserInfoModal() {
