@@ -142,10 +142,45 @@
             console.log('Caricamento utenti...');
         }
 
-        function loadGroups() {
-            // Implementa la logica per caricare i gruppi
-            console.log('Caricamento gruppi...');
+        function loadUsers() {
+    const token = localStorage.getItem('token');
+    fetch('https://autisti.onrender.com/admin/users', {
+        headers: {
+            'Authorization': `Bearer ${token}`
         }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Accesso non autorizzato');
+        }
+        return response.json();
+    })
+    .then(users => {
+        const tableBody = document.querySelector("#usersTable tbody");
+        tableBody.innerHTML = '';
+        users.forEach(user => {
+            const row = `
+                <tr>
+                    <td>${user.username}</td>
+                    <td>${user.email}</td>
+                    <td>${user.role}</td>
+                    <td>
+                        <button onclick="showUserInfo(${user.id})">Info</button>
+                        <button onclick="resetPassword(${user.id})">Resetta Password</button>
+                        <button onclick="deleteUser(${user.id})">Elimina</button>
+                    </td>
+                </tr>
+            `;
+            tableBody.innerHTML += row;
+        });
+    })
+    .catch(error => {
+        console.error('Errore nel caricamento degli utenti:', error);
+        if (error.message === 'Accesso non autorizzato') {
+            window.location.href = 'index.html';
+        }
+    });
+}
 
         function showAddGroupForm() {
             // Implementa la logica per mostrare il form di aggiunta gruppo
