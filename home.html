@@ -28,12 +28,18 @@
             menu.classList.toggle('open');
         }
 
-        function logout() {
-            localStorage.removeItem('token');
-            window.location.href = 'index.html';
-        }
+       let inactivityTimer;
 
-        document.getElementById('logout').addEventListener('click', logout);
-    </script>
+    function resetInactivityTimer() {
+        clearTimeout(inactivityTimer);
+        inactivityTimer = setTimeout(logout, 10 * 60 * 1000); // 10 minuti
+    }
+
+    ['click', 'touchstart', 'mousemove'].forEach(evt => 
+        document.addEventListener(evt, resetInactivityTimer, false)
+    );
+
+    document.addEventListener('DOMContentLoaded', resetInactivityTimer);
+</script>
 </body>
 </html>
