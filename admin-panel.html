@@ -106,12 +106,11 @@
     <script>
    // Verifica l'accesso dell'utente
         function checkAccess() {
-            const token = localStorage.getItem('token');
             const userRole = localStorage.getItem('userRole');
-            if (!token || (userRole !== 'admin' && userRole !== 'superadmin')) {
-                window.location.href = 'index.html';
+            if (userRole !== 'admin' && userRole !== 'superadmin') {
+                window.location.href = 'home.html';
             }
-        } 
+        }
         // Chiamata alla funzione di verifica all'avvio della pagina
         document.addEventListener('DOMContentLoaded', checkAccess);
         
@@ -167,24 +166,19 @@ function addUser(event) {
         menu.classList.toggle('open');
     }
 
-    function openTab(evt, tabName) {
-        var i, tabcontent, tablinks;
-        tabcontent = document.getElementsByClassName("tabcontent");
-        for (i = 0; i < tabcontent.length; i++) {
-            tabcontent[i].style.display = "none";
+   function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
         }
-        tablinks = document.getElementsByClassName("tablinks");
-        for (i = 0; i < tablinks.length; i++) {
-            tablinks[i].className = tablinks[i].className.replace(" active", "");
-        }
-        document.getElementById(tabName).style.display = "block";
-        evt.currentTarget.className += " active";
-        if (tabName === 'Users') {
-            loadUsers();
-        } else if (tabName === 'Groups') {
-            loadGroups();
-        }
-    }
 
     function loadUsers(page = 1) {
     const token = localStorage.getItem('token');
