@@ -3,34 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pannello Amministrativo - Smart TP</title>
+    <title>Pannello Amministrativo</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="landscape-warning">
         <div>
-            <p>Per favore, ruota il dispositivo in orizzontale</p>
-            <svg viewBox="0 0 24 24" width="50" height="50">
-                <path d="M7 1L17 1A2 2 0 0 1 19 3V21A2 2 0 0 1 17 23H7A2 2 0 0 1 5 21V3A2 2 0 0 1 7 1zM7 4V20H17V4H7zM12 21A1 1 0 1 0 12 19 1 1 0 0 0 12 21z" fill="currentColor"/>
-                <path d="M10 10L14 14M14 10L10 14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-            </svg>
+            Per favore, ruota il dispositivo in orizzontale
+            <img src="data:image/svg+xml;base64,PHN2ZyB2aWV3Ym94PSIwIDAgMjQgMjQiIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCI+CiAgICAgICAgICAgICAgICA8cGF0aCBkPSJNNyAxTDE3IDFBMiAyIDAgMCAxIDE5IDNWMjFBMiAyIDAgMCAxIDE3IDIzSDdBMiAyIDAgMCAxIDUgMjFWM0EyIDIgMCAwIDEgNyAxek03IDRWMjBIMTdWNEg3ek0xMiAyMUExIDEgMCAxIDAgMTIgMTkgMSAxIDAgMCAwIDEyIDIxeiIgZmlsbD0iY3VycmVudENvbG9yIj48L3BhdGg+CiAgICAgICAgICAgICAgICA8cGF0aCBkPSJNMTAgMTBMMTQgMTRNMTQgMTBMMTAgMTQiIHN0cm9rZT0iY3VycmVudENvbG9yIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCI+PC9wYXRoPgogICAgICAgICAgICA8L3N2Zz4=" alt="Rotate device">
         </div>
     </div>
 
     <div class="menu-icon" onclick="toggleMenu()">☰</div>
-    
-    <nav class="menu" id="sideMenu">
+
+    <div class="menu">
         <ul>
             <li><a href="home.html">Home</a></li>
-            <li><a href="#">Profilo</a></li>
+            <li><a href="#" onclick="showProfile()">Profilo</a></li>
             <li><a href="admin-panel.html">Pannello Amministrativo</a></li>
             <li><a href="#" id="logout">Logout</a></li>
         </ul>
-    </nav>
+    </div>
 
-    <div class="container">
+   <div class="container">
         <h1>Pannello Amministrativo</h1>
-        
+
         <div class="tab">
             <button class="tablinks" onclick="openTab(event, 'Users')">Gestione Utenti</button>
             <button class="tablinks" onclick="openTab(event, 'Groups')">Gestione Gruppi</button>
@@ -39,402 +36,107 @@
 
         <div id="Users" class="tabcontent">
             <h2>Gestione Utenti</h2>
-            <table id="usersTable">
-                <thead>
-                    <tr>
-                        <th>Username</th>
-                        <th>Email</th>
-                        <th>Ruolo</th>
-                        <th>Azioni</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Gli utenti verranno inseriti qui dinamicamente -->
-                </tbody>
+            <table id="userTable">
+                <tr>
+                    <th>Cognome</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Ruolo</th>
+                    <th>Azioni</th>
+                    <th>Beta 1</th>
+                    <th>Beta 2</th>
+                </tr>
+                <!-- Gli utenti verranno inseriti qui dinamicamente -->
             </table>
         </div>
 
         <div id="Groups" class="tabcontent">
             <h2>Gestione Gruppi</h2>
-            <button onclick="showAddGroupForm()">Aggiungi Gruppo</button>
-            <table id="groupsTable">
-                <thead>
-                    <tr>
-                        <th>Nome Gruppo</th>
-                        <th>Descrizione</th>
-                        <th>Azioni</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- I gruppi verranno inseriti qui dinamicamente -->
-                </tbody>
+            <button onclick="showAddGroupModal()">Aggiungi Gruppo</button>
+            <table id="groupTable">
+                <tr>
+                    <th>Nome Gruppo</th>
+                    <th>Descrizione</th>
+                    <th>Azioni</th>
+                </tr>
+                <!-- I gruppi verranno inseriti qui dinamicamente -->
             </table>
         </div>
 
         <div id="AddUser" class="tabcontent">
-            <h3>Aggiungi Nuovo Utente</h3>
+            <h2>Aggiungi Nuovo Utente</h2>
             <form id="addUserForm">
-                <!-- Inserisci qui i campi del form per aggiungere un nuovo utente -->
+                <input type="text" id="newUsername" placeholder="Username" required>
+                <input type="email" id="newEmail" placeholder="Email" required>
+                <input type="password" id="newPassword" placeholder="Password" required>
+                <input type="text" id="newNome" placeholder="Nome" required>
+                <input type="text" id="newCognome" placeholder="Cognome" required>
+                <input type="text" id="newDitta" placeholder="Ditta">
+                <input type="text" id="newSettore" placeholder="Settore">
+                <input type="text" id="newDeposito" placeholder="Deposito">
+                <input type="text" id="newFunzione" placeholder="Funzione">
+                <input type="text" id="newMatricola" placeholder="Matricola">
+                <input type="date" id="newDataNascita" placeholder="Data di Nascita">
+                <input type="tel" id="newTelefono" placeholder="Telefono">
+                <select id="newRole">
+                    <option value="user">Utente</option>
+                    <option value="admin">Admin</option>
+                    <option value="superadmin" class="superadmin-only">Superadmin</option>
+                </select>
+                <button type="submit">Aggiungi Utente</button>
             </form>
         </div>
     </div>
 
     <div id="userInfoModal" class="modal">
         <div class="modal-content">
-            <h3>Informazioni Utente</h3>
+            <h2>Informazioni Utente</h2>
             <div id="userInfoContent"></div>
             <div id="userGroupsCheckboxes"></div>
-            <textarea id="userNotes" placeholder="Note (solo per amministratori)"></textarea>
-            <button onclick="saveUserInfo()">Salva Modifiche</button>
+            <button onclick="saveUserChanges()">Salva Modifiche</button>
             <button onclick="closeUserInfoModal()">Chiudi</button>
         </div>
     </div>
 
     <div id="groupModal" class="modal">
         <div class="modal-content">
-            <h3>Gestione Gruppo</h3>
-            <input type="text" id="groupName" placeholder="Nome Gruppo" required>
+            <h2>Gestione Gruppo</h2>
+            <input type="text" id="groupName" placeholder="Nome Gruppo">
             <textarea id="groupDescription" placeholder="Descrizione"></textarea>
-            <div id="groupPermissions">
-                <!-- Checkbox per le permissioni verranno generate dinamicamente -->
-            </div>
+            <div id="groupPermissions"></div>
             <button onclick="saveGroup()">Salva Gruppo</button>
             <button onclick="closeGroupModal()">Annulla</button>
         </div>
     </div>
 
+    <script src="admin-panel.js"></script>
     <script>
-   // Verifica l'accesso dell'utente
-        function checkAccess() {
-            const userRole = localStorage.getItem('userRole');
-            if (userRole !== 'admin' && userRole !== 'superadmin') {
-                window.location.href = 'home.html';
-            }
-        }
-        // Chiamata alla funzione di verifica all'avvio della pagina
-        document.addEventListener('DOMContentLoaded', checkAccess);
-        
-function addUser(event) {
-    event.preventDefault();
-    const token = localStorage.getItem('token');
-    const userData = {
-        username: document.getElementById('newUsername').value,
-        email: document.getElementById('newEmail').value,
-        password: document.getElementById('newPassword').value,
-        nome: document.getElementById('newNome').value,
-        cognome: document.getElementById('newCognome').value,
-        ditta: document.getElementById('newDitta').value,
-        settore: document.getElementById('newSettore').value,
-        deposito: document.getElementById('newDeposito').value,
-        funzione: document.getElementById('newSettore').value === 'Autolinee'
-            ? document.getElementById('newFunzioneAutolineeSelect').value
-            : Array.from(document.querySelectorAll('input[name="newFunzione"]:checked')).map(cb => cb.value).join(', '),
-        matricola: document.getElementById('newMatricola').value,
-        dataNascita: document.getElementById('newDataNascita').value,
-        telefono: document.getElementById('newTelefono').value,
-        role: document.getElementById('newRole').value
-    };
+        // Script per il logout automatico
+        let inactivityTimer;
 
-    fetch('https://autisti.onrender.com/admin/users', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(userData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.id) {
-            alert('Utente creato con successo');
-            document.getElementById('addUserForm').reset();
-            loadUsers();
-        } else {
-            alert('Errore nella creazione dell\'utente');
-        }
-    })
-    .catch(error => {
-        console.error('Errore:', error);
-        alert('Errore nella creazione dell\'utente');
-    });
-}
-
-
-        
-    function toggleMenu() {
-        const menu = document.getElementById('sideMenu');
-        menu.classList.toggle('open');
-    }
-
-   function openTab(evt, tabName) {
-            var i, tabcontent, tablinks;
-            tabcontent = document.getElementsByClassName("tabcontent");
-            for (i = 0; i < tabcontent.length; i++) {
-                tabcontent[i].style.display = "none";
-            }
-            tablinks = document.getElementsByClassName("tablinks");
-            for (i = 0; i < tablinks.length; i++) {
-                tablinks[i].className = tablinks[i].className.replace(" active", "");
-            }
-            document.getElementById(tabName).style.display = "block";
-            evt.currentTarget.className += " active";
+        function resetInactivityTimer() {
+            clearTimeout(inactivityTimer);
+            inactivityTimer = setTimeout(autoLogout, 10 * 60 * 1000); // 10 minuti
         }
 
-    function loadUsers(page = 1) {
-    const token = localStorage.getItem('token');
-    fetch(`https://autisti.onrender.com/admin/users?page=${page}&limit=15`, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Accesso non autorizzato');
-        }
-        return response.json();
-    })
-    .then(data => {
-        const { users, totalPages, currentPage } = data;
-        const tableBody = document.querySelector("#usersTable tbody");
-        tableBody.innerHTML = '';
-        users.forEach((user, index) => {
-            const backgroundColor = index % 2 === 0 ? 'rgba(115, 89, 74, 0.1)' : 'rgba(115, 89, 74, 0.2)';
-            const rows = `
-                <tr style="background-color: ${backgroundColor};">
-                    <td rowspan="2">${user.cognome}</td>
-                    <td rowspan="2">${user.nome}</td>
-                    <td rowspan="2">${user.email}</td>
-                    <td rowspan="2">${user.role}</td>
-                    <td>
-                        <button onclick="resetPassword(${user.id})">Reset Password</button>
-                        <button onclick="showUserInfo(${user.id})">Info</button>
-                    </td>
-                </tr>
-                <tr style="background-color: ${backgroundColor};">
-                    <td>
-                        <button onclick="deleteUser(${user.id})">Elimina</button>
-                        <label><input type="checkbox" ${user.beta1 ? 'checked' : ''} onchange="updateBetaGroup(${user.id}, 'beta1', this.checked)"> B1</label>
-                        <label><input type="checkbox" ${user.beta2 ? 'checked' : ''} onchange="updateBetaGroup(${user.id}, 'beta2', this.checked)"> B2</label>
-                    </td>
-                </tr>
-            `;
-            tableBody.innerHTML += rows;
-        });
-        // Aggiorna i controlli di paginazione
-        updatePaginationControls(currentPage, totalPages);
-    })
-    .catch(error => {
-        console.error('Errore nel caricamento degli utenti:', error);
-        if (error.message === 'Accesso non autorizzato') {
-            window.location.href = 'index.html';
-        }
-    });
-}
-
-function updatePaginationControls(currentPage, totalPages) {
-    const paginationControls = document.querySelector('.pagination') || document.createElement('div');
-    paginationControls.className = 'pagination';
-    paginationControls.innerHTML = '';
-
-    if (currentPage > 1) {
-        paginationControls.innerHTML += `<button onclick="loadUsers(${currentPage - 1})">←</button>`;
-    }
-
-    if (currentPage > 1) {
-        paginationControls.innerHTML += `<button onclick="loadUsers(${currentPage - 1})">${currentPage - 1}</button>`;
-    }
-
-    paginationControls.innerHTML += `<button class="active">${currentPage}</button>`;
-
-    if (currentPage < totalPages) {
-        paginationControls.innerHTML += `<button onclick="loadUsers(${currentPage + 1})">${currentPage + 1}</button>`;
-    }
-
-    if (currentPage < totalPages) {
-        paginationControls.innerHTML += `<button onclick="loadUsers(${currentPage + 1})">→</button>`;
-    }
-
-    const tableContainer = document.querySelector('#Users');
-    if (!document.querySelector('.pagination')) {
-        tableContainer.appendChild(paginationControls);
-    }
-}
-function updateBetaGroup(userId, group, isChecked) {
-    const token = localStorage.getItem('token');
-    fetch(`https://autisti.onrender.com/admin/users/${userId}/beta`, {
-        method: 'POST',
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ group, isChecked })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Errore nell\'aggiornamento del gruppo beta');
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Gruppo beta aggiornato con successo');
-    })
-    .catch(error => {
-        console.error('Errore:', error);
-        alert('Errore nell\'aggiornamento del gruppo beta');
-    });
-}
-    function loadGroups() {
-        // Implementa la logica per caricare i gruppi
-        console.log('Caricamento gruppi...');
-    }
-
-    function showAddGroupForm() {
-        // Implementa la logica per mostrare il form di aggiunta gruppo
-        console.log('Mostra form aggiungi gruppo');
-    }
-function showUserInfo(userId) {
-    const token = localStorage.getItem('token');
-    fetch(`https://autisti.onrender.com/admin/users/${userId}`, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    })
-    .then(response => response.json())
-    .then(user => {
-        const userInfoContent = document.getElementById('userInfoContent');
-        userInfoContent.innerHTML = `
-            <div style="display: flex; justify-content: space-between;">
-                <div style="width: 48%;">
-                    <p><strong>Username:</strong> <input type="text" id="editUsername" value="${user.username}"></p>
-                    <p><strong>Email:</strong> <input type="email" id="editEmail" value="${user.email}"></p>
-                    <p><strong>Ruolo:</strong> 
-                        <select id="editRole">
-                            <option value="user" ${user.role === 'user' ? 'selected' : ''}>Utente</option>
-                            <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>Admin</option>
-                            <option value="superadmin" ${user.role === 'superadmin' ? 'selected' : ''}>Superadmin</option>
-                        </select>
-                    </p>
-                    <p><strong>Cognome:</strong> <input type="text" id="editCognome" value="${user.cognome || ''}"></p>
-                    <p><strong>Nome:</strong> <input type="text" id="editNome" value="${user.nome || ''}"></p>
-                    <p><strong>Ditta:</strong> <input type="text" id="editDitta" value="${user.ditta || ''}"></p>
-                </div>
-                <div style="width: 48%;">
-                    <p><strong>Settore:</strong> <input type="text" id="editSettore" value="${user.settore || ''}"></p>
-                    <p><strong>Deposito:</strong> <input type="text" id="editDeposito" value="${user.deposito || ''}"></p>
-                    <p><strong>Funzione:</strong> <input type="text" id="editFunzione" value="${user.funzione || ''}"></p>
-                    <p><strong>Matricola:</strong> <input type="text" id="editMatricola" value="${user.matricola || ''}"></p>
-                    <p><strong>Data di Nascita:</strong> <input type="date" id="editDataNascita" value="${user.data_nascita || ''}"></p>
-                    <p><strong>Telefono:</strong> <input type="tel" id="editTelefono" value="${user.telefono || ''}"></p>
-                </div>
-            </div>
-            <p><strong>Note:</strong></p>
-            <textarea id="userNotes" style="width: 100%; height: 100px;">${user.note || ''}</textarea>
-            <div style="margin-top: 20px; text-align: right;">
-                <button onclick="saveUserInfo(${user.id})" style="margin-right: 10px;">Salva</button>
-                <button onclick="closeUserInfoModal()">Esci</button>
-            </div>
-        `;
-        document.getElementById('userInfoModal').style.display = 'block';
-    })
-    .catch(error => {
-        console.error('Errore nel caricamento delle informazioni utente:', error);
-    });
-}
-    function saveUserInfo(userId) {
-    const token = localStorage.getItem('token');
-    const userData = {
-        username: document.getElementById('editUsername').value,
-        email: document.getElementById('editEmail').value,
-        role: document.getElementById('editRole').value,
-        cognome: document.getElementById('editCognome').value,
-        nome: document.getElementById('editNome').value,
-        ditta: document.getElementById('editDitta').value,
-        settore: document.getElementById('editSettore').value,
-        deposito: document.getElementById('editDeposito').value,
-        funzione: document.getElementById('editFunzione').value,
-        matricola: document.getElementById('editMatricola').value,
-        dataNascita: document.getElementById('editDataNascita').value,
-        telefono: document.getElementById('editTelefono').value,
-        note: document.getElementById('userNotes').value
-    };
-
-    fetch(`https://autisti.onrender.com/admin/users/${userId}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(userData)
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.id) {
-            alert('Informazioni utente aggiornate con successo');
-            closeUserInfoModal();
-            loadUsers(); // Ricarica la lista degli utenti
-        } else {
-            alert('Errore nell\'aggiornamento delle informazioni utente');
-        }
-    })
-    .catch(error => {
-        console.error('Errore:', error);
-        alert('Errore nell\'aggiornamento delle informazioni utente');
-    });
-}
-
-function closeUserInfoModal() {
-    document.getElementById('userInfoModal').style.display = 'none';
-}
-
-    function closeUserInfoModal() {
-        document.getElementById('userInfoModal').style.display = 'none';
-    }
-
-    function saveGroup() {
-        // Implementa la logica per salvare il gruppo
-        console.log('Salvataggio gruppo...');
-    }
-
-    function closeGroupModal() {
-        document.getElementById('groupModal').style.display = 'none';
-    }
-
-function logout() {
+        function autoLogout() {
             localStorage.removeItem('token');
-            localStorage.removeItem('userRole');
-            window.location.href = 'index.html';
+            localStorage.removeItem('role');
+            window.location.href = 'login.html';
         }
 
-        document.getElementById('logout').addEventListener('click', logout);
+        document.addEventListener('mousemove', resetInactivityTimer);
+        document.addEventListener('keypress', resetInactivityTimer);
 
-        document.addEventListener('DOMContentLoaded', function() {
-            checkAccess();
-            openTab(event, 'Users');
-        });
-
-    let inactivityTimer;
-
-    function resetInactivityTimer() {
-        clearTimeout(inactivityTimer);
-        inactivityTimer = setTimeout(logout, 10 * 60 * 1000); // 10 minuti
-    }
-
-    // Resetta il timer su ogni interazione dell'utente
-    ['click', 'touchstart', 'mousemove'].forEach(evt => 
-        document.addEventListener(evt, resetInactivityTimer, false)
-    );
-
-    document.addEventListener('DOMContentLoaded', function() {
-        // Inizializzazione della pagina
-        openTab(event, 'Users');
         resetInactivityTimer();
 
-        // Aggiungi l'event listener per il pulsante di logout
-        const logoutButton = document.getElementById('logout');
-        if (logoutButton) {
-            logoutButton.addEventListener('click', logout);
-        }
-    });
-</script>
+        // Controllo del ruolo per nascondere elementi
+        document.addEventListener('DOMContentLoaded', () => {
+            const userRole = localStorage.getItem('role');
+            if (userRole !== 'superadmin') {
+                document.querySelectorAll('.superadmin-only').forEach(el => el.style.display = 'none');
+            }
+        });
+    </script>
 </body>
 </html>
