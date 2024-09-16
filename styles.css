@@ -3,137 +3,113 @@ body {
     margin: 0;
     padding: 0;
     background-image: url('sfondo01.jpg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-        }
-
-
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
 
 .container {
-    width: 80%;
-    margin: auto;
+    width: 90%;
+    max-width: 400px;
     background-color: rgba(255, 255, 255, 0.9);
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
 }
 
-#userInfoModal {
-    max-width: 800px;
-    width: 90%;
+.logo {
+    max-width: 100px;
+    display: block;
+    margin: 0 auto 20px;
 }
 
-#userNotes {
-    width: 100%;
-    height: 100px;
-    margin-bottom: 20px;
-}
-
-.modal-content button {
-    margin-top: 10px;
-}
-.menu-icon {
-    position: fixed;
+.lang-selector {
+    position: absolute;
     top: 20px;
     right: 20px;
-    cursor: pointer;
-    z-index: 1001;
-    font-size: 24px;
-    color: rgb(115,89,74);
-    background-color: rgba(255, 255, 255, 0.5);
-    border-radius: 50%;
+    display: flex;
+    gap: 10px;
+}
+
+.lang-icon {
     width: 40px;
     height: 40px;
+    border-radius: 50%;
+    border: none;
+    background-color: #f0f0f0;
+    color: #333;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.lang-icon:hover {
+    background-color: #e0e0e0;
+}
+
+.lang-icon.active {
+    background-color: #4a90e2;
+    color: white;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+}
+
+form {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    gap: 15px;
 }
-.menu {
-    position: fixed;
-    top: 0;
-    right: -300px;
-    width: 300px;
-    height: 100vh;
-    background-color: rgba(255, 255, 255, 0.9);
-    transition: right 0.3s ease;
-    padding: 20px;
-    box-sizing: border-box;
-    z-index: 1000;
+
+input, button {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
 }
-.menu.open {
-    right: 0;
+
+button {
+    background-color: #4a90e2;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
 }
-.menu ul {
-    list-style-type: none;
-    padding: 0;
+
+button:hover {
+    background-color: #3a7bd5;
 }
-.menu ul li {
-    margin-bottom: 10px;
+
+.links {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
 }
-.menu ul li a {
-    color: rgb(115,89,74);
+
+.links a {
+    color: #4a90e2;
     text-decoration: none;
 }
-.tab {
-    overflow: hidden;
-    border: 1px solid #ccc;
-    background-color: #f1f1f1;
+
+.ps-design {
+    text-align: center;
+    margin-top: 20px;
+    color: #4a90e2;
 }
-.tab button {
-    background-color: inherit;
-    float: left;
-    border: none;
-    outline: none;
-    cursor: pointer;
-    padding: 14px 16px;
-    transition: 0.3s;
-}
-.tab button:hover {
-    background-color: #ddd;
-}
-.tab button.active {
-    background-color: #ccc;
-}
-.tabcontent {
-    display: none;
-    padding: 6px 12px;
-    border: 1px solid #ccc;
-    border-top: none;
-}
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.4);
-}
-.modal-content {
-    background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
-    border: 1px solid #888;
-    width: 80%;
-}
-.landscape-warning {
-    display: none;
-}
-@media screen and (max-width: 768px) and (orientation: portrait) {
-    .landscape-warning {
-        display: flex;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0,0,0,0.8);
-        color: white;
+
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 15px;
+    }
+
+    .lang-selector {
+        position: static;
         justify-content: center;
-        align-items: center;
-        z-index: 2000;
+        margin-bottom: 20px;
     }
 }
