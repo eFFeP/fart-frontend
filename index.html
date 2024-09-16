@@ -1,296 +1,255 @@
-<!DOCTYPE html>
-<html lang="it">
-<head>
-    <link rel="stylesheet" href="styles.css">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart TP - Login</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            background-image: url('sfondo01.jpg');
-            background-size: cover;
-            background-position: center;
-        }
-        .container {
-            background-color: rgba(255, 255, 255, 0.8);
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            width: 400px;
-            position: relative;
-            padding-bottom: 50px;
-        }
-        .logo {
-            display: block;
-            margin: calc(300px * 0.2) auto 20px;
-            width: 300px;
-            max-width: 100%;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-        }
-        input {
-            margin: 5px 0;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        button {
-            margin: 10px auto 5px;
-            padding: 10px 20px;
-            background-color: rgb(150,123,102);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            display: block;
-            width: 80%;
-            font-size: 16px;
-        }
-        button:hover {
-            background-color: rgb(130,103,82);
-        }
-        .links {
-            margin-top: 5px;
-            display: flex;
-            justify-content: space-between;
-            padding: 0 20px;
-        }
-        .links a {
-            color: rgb(150,123,102);
-            text-decoration: none;
-        }
-        .links a:hover {
-            text-decoration: underline;
-        }
-        .lang-selector {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            display: flex;
-        }
-        .lang-icon {
-            margin: 0 5px;
-            cursor: pointer;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #f0f0f0;
-            border: 1px solid #ddd;
-            transition: all 0.3s ease;
-            color: rgb(188,158,119);
-        }
-        .lang-icon:hover {
-            background-color: rgb(188,158,119);
-            color: white;
-        }
-        .lang-icon.active {
-            background-color: rgb(150,123,102);
-            color: white;
-        }
-        .ps-design {
-            position: absolute;
-            bottom: 10px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            color: rgb(68, 145, 170);
-            font-size: 12px;
-            margin-top: 15px;
-        }
-        #message {
-            text-align: center;
-            color: rgb(150,123,102);
-            margin-top: 10px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <img src="logo.png" alt="Smart TP Logo" class="logo">
-        <div class="lang-selector">
-            <span class="lang-icon" data-lang="it">IT</span>
-            <span class="lang-icon" data-lang="de">DE</span>
-            <span class="lang-icon" data-lang="fr">FR</span>
-            <span class="lang-icon" data-lang="en">EN</span>
-        </div>
-        <form id="loginForm">
-            <input type="email" id="email" placeholder="Email" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <button type="submit" id="loginButton">Accedi</button>
-        </form>
-        <p id="message"></p>
-        <div class="links">
-            <a href="#" id="forgotPassword">Password dimenticata?</a>
-            <a href="#" id="register">Registrati</a>
-        </div>
-        <div class="ps-design">PS Design</div>
-    </div>
-    <script>
-        const translations = {
-            it: {
-                email: "Email",
-                password: "Password",
-                loginButton: "Accedi",
-                forgotPassword: "Password dimenticata?",
-                register: "Registrati",
-                loginSuccess: "Accesso effettuato con successo!",
-                loginError: "Errore durante l'accesso. Riprova.",
-                forgotPasswordPrompt: "Inserisci la tua email per il recupero password:",
-                forgotPasswordSuccess: "Se l'email esiste, riceverai istruzioni per il reset della password.",
-                forgotPasswordError: "Errore durante la richiesta di recupero password",
-                registerPrompt: "Funzionalità di registrazione non ancora implementata nell'interfaccia"
-            },
-            en: {
-                email: "Email",
-                password: "Password",
-                loginButton: "Login",
-                forgotPassword: "Forgot Password?",
-                register: "Register",
-                loginSuccess: "Login successful!",
-                loginError: "Error during login. Please try again.",
-                forgotPasswordPrompt: "Enter your email for password recovery:",
-                forgotPasswordSuccess: "If the email exists, you will receive password reset instructions.",
-                forgotPasswordError: "Error during password recovery request",
-                registerPrompt: "Registration functionality not yet implemented in the interface"
-            },
-            de: {
-                email: "E-Mail",
-                password: "Passwort",
-                loginButton: "Anmelden",
-                forgotPassword: "Passwort vergessen?",
-                register: "Registrieren",
-                loginSuccess: "Anmeldung erfolgreich!",
-                loginError: "Fehler bei der Anmeldung. Bitte versuchen Sie es erneut.",
-                forgotPasswordPrompt: "Geben Sie Ihre E-Mail-Adresse für die Passwortwiederherstellung ein:",
-                forgotPasswordSuccess: "Wenn die E-Mail existiert, erhalten Sie Anweisungen zum Zurücksetzen des Passworts.",
-                forgotPasswordError: "Fehler bei der Anforderung zur Passwortwiederherstellung",
-                registerPrompt: "Registrierungsfunktion noch nicht in der Benutzeroberfläche implementiert"
-            },
-            fr: {
-                email: "E-mail",
-                password: "Mot de passe",
-                loginButton: "Se connecter",
-                forgotPassword: "Mot de passe oublié ?",
-                register: "S'inscrire",
-                loginSuccess: "Connexion réussie !",
-                loginError: "Erreur lors de la connexion. Veuillez réessayer.",
-                forgotPasswordPrompt: "Entrez votre e-mail pour la récupération du mot de passe :",
-                forgotPasswordSuccess: "Si l'e-mail existe, vous recevrez des instructions pour réinitialiser le mot de passe.",
-                forgotPasswordError: "Erreur lors de la demande de récupération du mot de passe",
-                registerPrompt: "Fonctionnalité d'inscription pas encore implémentée dans l'interface"
-            }
-        };
 
-        let currentLang = 'it';
+require('dotenv').config();
+const express = require('express');
+const { Pool } = require('pg');
+const bcrypt = require('bcrypt');
+const cors = require('cors');
+const jwt = require('jsonwebtoken');
+const sgMail = require('@sendgrid/mail');
+const rateLimit = require("express-rate-limit");
 
-        function updateLanguage(lang) {
-            currentLang = lang;
-            document.querySelectorAll('.lang-icon').forEach(icon => {
-                icon.classList.remove('active');
-            });
-            document.querySelector(`.lang-icon[data-lang="${lang}"]`).classList.add('active');
-            
-            document.getElementById('email').placeholder = translations[lang].email;
-            document.getElementById('password').placeholder = translations[lang].password;
-            document.getElementById('loginButton').textContent = translations[lang].loginButton;
-            document.getElementById('forgotPassword').textContent = translations[lang].forgotPassword;
-            document.getElementById('register').textContent = translations[lang].register;
-        }
+const app = express();
+app.use(cors());
+app.use(express.json());
 
-        document.querySelectorAll('.lang-icon').forEach(icon => {
-            icon.addEventListener('click', function() {
-                updateLanguage(this.dataset.lang);
-            });
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
+
+const JWT_SECRET = process.env.JWT_SECRET || 'your_jwt_secret';
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (token == null) return res.sendStatus(401);
+
+  jwt.verify(token, JWT_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+};
+
+const isAdmin = (req, res, next) => {
+  if (req.user && (req.user.role === 'admin' || req.user.role === 'superadmin')) {
+    next();
+  } else {
+    res.status(403).json({ error: 'Accesso non autorizzato' });
+  }
+};
+
+const isSuperAdmin = (req, res, next) => {
+  if (req.user && req.user.role === 'superadmin') {
+    next();
+  } else {
+    res.status(403).json({ error: 'Accesso non autorizzato' });
+  }
+};
+
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100
+});
+
+app.use(apiLimiter);
+
+// Rotta di login
+app.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+    if (result.rows.length > 0) {
+      const user = result.rows[0];
+      const isValidPassword = await bcrypt.compare(password, user.password);
+      if (isValidPassword) {
+        const token = jwt.sign(
+          { userId: user.id, email: user.email, role: user.role },
+          JWT_SECRET,
+          { expiresIn: '24h' }
+        );
+        res.json({ 
+          message: 'Login effettuato con successo',
+          token,
+          userId: user.id,
+          username: user.username,
+          role: user.role,
+          isFirstLogin: user.is_first_login
         });
+      } else {
+        res.status(401).json({ error: 'Credenziali non valide' });
+      }
+    } else {
+      res.status(401).json({ error: 'Credenziali non valide' });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Errore durante il login' });
+  }
+});
 
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const messageElement = document.getElementById('message');
+// Rotte per la gestione degli utenti
+app.get('/admin/users', authenticateToken, isAdmin, async (req, res) => {
+  try {
+    let query = 'SELECT * FROM users';
+    if (req.user.role !== 'superadmin') {
+      query += ' WHERE role != \'superadmin\'';
+    }
+    const result = await pool.query(query);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Errore nel recupero degli utenti' });
+  }
+});
 
-            try {
-                const response = await fetch('https://autisti.onrender.com/login', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ email, password }),
-                });
-                const data = await response.json();
+app.get('/admin/users/:id', authenticateToken, isAdmin, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query('SELECT * FROM users WHERE id = $1', [id]);
+    if (result.rows.length > 0) {
+      const user = result.rows[0];
+      delete user.password;
+      res.json(user);
+    } else {
+      res.status(404).json({ error: 'Utente non trovato' });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Errore nel recupero delle informazioni dell\'utente' });
+  }
+});
 
-                if (response.ok) {
-                    messageElement.textContent = translations[currentLang].loginSuccess;
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('userRole', data.role);
-                    window.location.href = 'home.html';
-                } else {
-                    messageElement.textContent = translations[currentLang].loginError;
-                }
-            } catch (error) {
-                console.error('Error during login:', error);
-                messageElement.textContent = translations[currentLang].loginError;
-            }
-        });
+app.post('/admin/users', authenticateToken, isAdmin, async (req, res) => {
+  const { username, email, password, nome, cognome, ditta, settore, deposito, funzione, matricola, dataNascita, telefono, role } = req.body;
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const result = await pool.query(
+      'INSERT INTO users (username, email, password, nome, cognome, ditta, settore, deposito, funzione, matricola, data_nascita, telefono, role, is_first_login) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING id',
+      [username, email, hashedPassword, nome, cognome, ditta, settore, deposito, funzione, matricola, dataNascita, telefono, role, true]
+    );
+    res.status(201).json({ message: 'Utente creato con successo', id: result.rows[0].id });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Errore durante la creazione dell\'utente' });
+  }
+});
 
-        document.getElementById('forgotPassword').addEventListener('click', function(e) {
-            e.preventDefault();
-            const email = prompt(translations[currentLang].forgotPasswordPrompt);
-            if (email) {
-                // Implementare la logica per il recupero password
-                alert(translations[currentLang].forgotPasswordSuccess);
-            }
-        });
+app.put('/admin/users/:id', authenticateToken, isAdmin, async (req, res) => {
+  const { id } = req.params;
+  const { username, email, nome, cognome, ditta, settore, deposito, funzione, matricola, dataNascita, telefono, role } = req.body;
+  try {
+    const result = await pool.query(
+      'UPDATE users SET username = $1, email = $2, nome = $3, cognome = $4, ditta = $5, settore = $6, deposito = $7, funzione = $8, matricola = $9, data_nascita = $10, telefono = $11, role = $12 WHERE id = $13 RETURNING *',
+      [username, email, nome, cognome, ditta, settore, deposito, funzione, matricola, dataNascita, telefono, role, id]
+    );
+    if (result.rows.length > 0) {
+      res.json(result.rows[0]);
+    } else {
+      res.status(404).json({ error: 'Utente non trovato' });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Errore nella modifica dell\'utente' });
+  }
+});
 
-        document.getElementById('register').addEventListener('click', function(e) {
-            e.preventDefault();
-            alert(translations[currentLang].registerPrompt);
-        });
+app.delete('/admin/users/:id', authenticateToken, isAdmin, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await pool.query('DELETE FROM users WHERE id = $1 RETURNING id', [id]);
+    if (result.rows.length > 0) {
+      res.json({ message: 'Utente eliminato con successo' });
+    } else {
+      res.status(404).json({ error: 'Utente non trovato' });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Errore nell\'eliminazione dell\'utente' });
+  }
+});
 
-        // Inizializza la lingua
-        updateLanguage('it');
+// Rotte per la gestione delle password
+app.post('/admin/users/:id/reset-password', authenticateToken, isAdmin, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await pool.query('SELECT email FROM users WHERE id = $1', [id]);
+    if (user.rows.length === 0) {
+      return res.status(404).json({ error: 'Utente non trovato' });
+    }
 
+    const resetToken = jwt.sign({ userId: id }, JWT_SECRET, { expiresIn: '1h' });
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
 
-        function login(event) {
-    event.preventDefault();
-    const email = document.getElementById('email').value;
-    const password = document.getElementById('password').value;
+    const msg = {
+      to: user.rows[0].email,
+      from: process.env.SENDGRID_FROM_EMAIL,
+      subject: 'Reset Password',
+      text: `Clicca sul seguente link per resettare la tua password: ${resetLink}`,
+      html: `<p>Clicca sul seguente link per resettare la tua password: <a href="${resetLink}">Reset Password</a></p>`,
+    };
 
-    fetch('https://autisti.onrender.com/login', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.token) {
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('userRole', data.role);
-            console.log('User role:', data.role); // Per debugging
-            window.location.href = 'home.html';
-        } else {
-            alert('Login fallito. Controlla le tue credenziali.');
-        }
-    })
-    .catch(error => {
-        console.error('Errore:', error);
-        alert('Si è verificato un errore durante il login.');
-    });
-}
-    </script>
-</body>
-</html>
+    await sgMail.send(msg);
+    await pool.query('UPDATE users SET reset_token = $1, is_first_login = true WHERE id = $2', [resetToken, id]);
+
+    res.json({ message: 'Email per il reset della password inviata con successo' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Errore nell\'invio dell\'email per il reset della password' });
+  }
+});
+
+app.post('/forgot-password', async (req, res) => {
+  const { email } = req.body;
+  try {
+    const user = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
+    if (user.rows.length === 0) {
+      return res.json({ message: 'Se l\'email esiste, riceverai istruzioni per il reset della password.' });
+    }
+
+    const resetToken = jwt.sign({ userId: user.rows[0].id }, JWT_SECRET, { expiresIn: '1h' });
+    const resetLink = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+
+    const msg = {
+      to: email,
+      from: process.env.SENDGRID_FROM_EMAIL,
+      subject: 'Reset Password',
+      text: `Clicca sul seguente link per resettare la tua password: ${resetLink}`,
+      html: `<p>Clicca sul seguente link per resettare la tua password: <a href="${resetLink}">Reset Password</a></p>`,
+    };
+
+    await sgMail.send(msg);
+    await pool.query('UPDATE users SET reset_token = $1 WHERE id = $2', [resetToken, user.rows[0].id]);
+
+    res.json({ message: 'Se l\'email esiste, riceverai istruzioni per il reset della password.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Errore nell\'invio dell\'email per il reset della password' });
+  }
+});
+
+// Rotte per la gestione dei gruppi beta
+app.post('/admin/users/:userId/beta', authenticateToken, isAdmin, async (req, res) => {
+  const { userId } = req.params;
+  const { group, isChecked } = req.body;
+  
+  try {
+    const updateField = group === 'beta1' ? 'beta1' : 'beta2';
+    await pool.query(
+      `UPDATE users SET ${updateField} = $1 WHERE id = $2`,
+      [isChecked, userId]
+    );
+    res.json({ message: 'Gruppo beta aggiornato con successo' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Errore nell\'aggiornamento del gruppo beta' });
+  }
+});
+
+// ... [Il resto del codice rimane invariato] ...
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
