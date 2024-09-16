@@ -24,35 +24,23 @@
     </div>
 
     <script>
-        function toggleMenu() {
+       function toggleMenu() {
             const menu = document.getElementById('sideMenu');
             menu.classList.toggle('open');
         }
 
-         function logout() {
+        function logout() {
             localStorage.removeItem('token');
+            localStorage.removeItem('userRole');
             window.location.href = 'index.html';
         }
 
         document.getElementById('logout').addEventListener('click', logout);
 
-        let inactivityTimer;
-
-        function resetInactivityTimer() {
-            clearTimeout(inactivityTimer);
-            inactivityTimer = setTimeout(logout, 10 * 60 * 1000); // 10 minuti
-        }
-
-        ['click', 'touchstart', 'mousemove'].forEach(evt => 
-            document.addEventListener(evt, resetInactivityTimer, false)
-        );
-
-        document.addEventListener('DOMContentLoaded', function() {
-            resetInactivityTimer();
-          
-        });
         function loadUserInfo() {
             const token = localStorage.getItem('token');
+            const userRole = localStorage.getItem('userRole');
+            
             fetch('https://autisti.onrender.com/user-profile', {
                 headers: {
                     'Authorization': `Bearer ${token}`
@@ -61,9 +49,12 @@
             .then(response => response.json())
             .then(user => {
                 document.getElementById('welcomeMessage').textContent = `Benvenuto ${user.username}`;
-                document.getElementById('userDetails').textContent = `${user.ditta} - ${user.settore.charAt(0).toUpperCase()}${user.matricola} - ${user.deposito}`;
-           // Mostra il link al pannello amministrativo solo per admin e superadmin
-                if (user.role === 'admin' || user.role === 'superadmin') {
+                document.getElementById('userDetails').textContent = `${user.ditta} - ${user.settore ? user.settore.charAt(0).toUpperCase() : ''}${user.matricola} - ${user.deposito}`;
+                
+                console.log('User role from localStorage:', userRole); // Per debugging
+                
+                // Mostra il link al pannello amministrativo solo per admin e superadmin
+                if (userRole === 'admin' || userRole === 'superadmin') {
                     document.getElementById('adminPanelLink').style.display = 'block';
                 }
             })
