@@ -3,73 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - Smart TP</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Login</title>
+    <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
-    <div class="menu-icon" onclick="toggleMenu()">☰</div>
-    
-    <nav class="menu" id="sideMenu">
-        <ul>
-            <li><a href="#">Home</a></li>
-            <li><a href="#">Profilo</a></li>
-            <li id="adminPanelLink"><a href="admin-panel.html">Pannello Amministrativo</a></li>
-            <li><a href="#" id="logout">Logout</a></li>
-        </ul>
-    </nav>
-
     <div class="container">
-        <h1 id="welcomeMessage"></h1>
-        <p id="userDetails" style="font-size: 0.9em;"></p>
+        <h1>Login</h1>
+        <form id="loginForm">
+            <input type="email" id="email" placeholder="Email" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <button type="submit">Accedi</button>
+        </form>
+        <p><a href="/forgot-password.html">Password dimenticata?</a></p>
     </div>
 
     <script>
-        function toggleMenu() {
-            const menu = document.getElementById('sideMenu');
-            menu.classList.toggle('open');
-        }
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
 
-        function logout() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('userRole');
-            window.location.href = 'index.html';
-        }
-
-        document.getElementById('logout').addEventListener('click', logout);
-
-        function loadUserInfo() {
-            const token = localStorage.getItem('token');
-            const userRole = localStorage.getItem('userRole');
-            
-            fetch('https://autisti.onrender.com/user-profile', {
+            fetch('/api/login', {
+                method: 'POST',
                 headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email, password }),
             })
             .then(response => response.json())
-            .then(user => {
-                document.getElementById('welcomeMessage').textContent = `Benvenuto ${user.username}`;
-                
-                const details = [
-                    user.ditta,
-                    user.settore && user.matricola ? `${user.settore.charAt(0).toUpperCase()}${user.matricola}` : null,
-                    user.deposito
-                ].filter(Boolean).join(' - ');
-                
-                document.getElementById('userDetails').textContent = details;
-                
-                if (userRole === 'admin' || userRole === 'superadmin') {
-                    document.getElementById('adminPanelLink').style.display = 'block';
+            .then(data => {
+                if (data.token) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('role', data.role);
+                    window.location.href = '/home.html';
                 } else {
-                    document.getElementById('adminPanelLink').style.display = 'none';
+                    alert('Login fallito. Controlla le tue credenziali.');
                 }
             })
             .catch(error => {
-                console.error('Errore nel caricamento delle informazioni utente:', error);
+                console.error('Errore:', error);
+                alert('Si è verificato un errore durante il login.');
             });
+        });
+
+        // Funzione per il logout automatico
+        let inactivityTimer;
+
+        function resetInactivityTimer() {
+            clearTimeout(inactivityTimer);
+            inactivityTimer = setTimeout(autoLogout, 10 * 60 * 1000); // 10 minuti
         }
 
-        document.addEventListener('DOMContentLoaded', loadUserInfo);
+        function autoLogout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('role');
+            window.location.href = '/index.html';
+        }
+
+        document.addEventListener('mousemove', resetInactivityTimer);
+        document.addEventListener('keypress', resetInactivityTimer);
+
+        resetInactivityTimer();
     </script>
 </body>
 </html>
