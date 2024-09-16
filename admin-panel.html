@@ -399,10 +399,18 @@ function closeUserInfoModal() {
         document.getElementById('groupModal').style.display = 'none';
     }
 
-    function logout() {
-        localStorage.removeItem('token');
-        window.location.href = 'index.html';
-    }
+function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('userRole');
+            window.location.href = 'index.html';
+        }
+
+        document.getElementById('logout').addEventListener('click', logout);
+
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAccess();
+            openTab(event, 'Users');
+        });
 
     let inactivityTimer;
 
