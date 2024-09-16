@@ -22,13 +22,6 @@ body {
     position: relative;
 }
 
-.logo {
-    max-width: 400px; /* Raddoppiata la dimensione del logo */
-    width: 100%;
-    display: block;
-    margin: 0 auto 20px;
-}
-
 .lang-selector {
     display: flex;
     justify-content: flex-end;
@@ -46,6 +39,9 @@ body {
     font-weight: bold;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .lang-icon:hover {
@@ -55,6 +51,13 @@ body {
 .lang-icon.active {
     background-color: #4a90e2;
     color: white;
+}
+
+.logo {
+    max-width: 400px;
+    width: 100%;
+    display: block;
+    margin: 40px auto 20px; /* Aggiunto margine superiore */
 }
 
 form {
@@ -94,6 +97,7 @@ button:hover {
 .ps-design {
     text-align: center;
     margin-top: 20px;
+    margin-bottom: 0; /* Rimosso il margine inferiore */
     color: #4a90e2;
 }
 
@@ -104,7 +108,8 @@ button:hover {
     }
 
     .logo {
-        max-width: 300px; /* Leggermente ridotto per dispositivi mobili */
+        max-width: 300px;
+        margin-top: 30px; /* Leggermente ridotto per dispositivi mobili */
     }
 
     .lang-selector {
