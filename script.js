@@ -17,14 +17,27 @@ document.addEventListener('DOMContentLoaded', function() {
             forgotPassword: 'Password dimenticata?',
             register: 'Registrati'
         },
+        fr: {
+            username: 'Nom d\'utilisateur',
+            password: 'Mot de passe',
+            login: 'Connexion',
+            forgotPassword: 'Mot de passe oublié ?',
+            register: 'S\'inscrire'
+        },
+        de: {
+            username: 'Benutzername',
+            password: 'Passwort',
+            login: 'Anmelden',
+            forgotPassword: 'Passwort vergessen?',
+            register: 'Registrieren'
+        },
         en: {
             username: 'Username',
             password: 'Password',
             login: 'Login',
             forgotPassword: 'Forgot password?',
             register: 'Register'
-        },
-        // Aggiungi altre lingue qui
+        }
     };
 
     function updateLanguage(lang) {
