@@ -3,90 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart TP - Login</title>
+    <title>Smart TP Login</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <img src="logo.png" alt="Smart TP Logo" class="logo">
-
-        <div class="lang-selector">
-            <span class="lang-icon" data-lang="it">IT</span>
-            <span class="lang-icon" data-lang="de">DE</span>
-            <span class="lang-icon" data-lang="fr">FR</span>
-            <span class="lang-icon" data-lang="en">EN</span>
-        </div>
-
-        <form id="loginForm">
+        <header>
+            <img src="logo.png" alt="Logo Smart TP" class="logo">
+            <div class="lang-selector">
+                <button class="lang-icon" data-lang="it">IT</button>
+                <button class="lang-icon" data-lang="de">DE</button>
+                <button class="lang-icon" data-lang="fr">FR</button>
+                <button class="lang-icon" data-lang="en">EN</button>
+            </div>
+        </header>
+        <main>
             <h2>Accedi</h2>
-            <input type="email" id="email" placeholder="Email" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <button type="submit">Accedi</button>
-        </form>
-
-        <div class="links">
-            <a href="#" id="forgotPassword">Password dimenticata?</a>
-            <a href="#" id="register">Registrati</a>
-        </div>
-
-        <div class="ps-design">
-            PS Design
-        </div>
+            <form id="loginForm">
+                <input type="text" id="username" placeholder="Nome utente" required>
+                <input type="password" id="password" placeholder="Password" required>
+                <button type="submit">Accedi</button>
+            </form>
+            <div class="links">
+                <a href="#" id="forgotPassword">Password dimenticata?</a>
+                <a href="#" id="register">Registrati</a>
+            </div>
+        </main>
+        <footer>
+            <p class="ps-design">PS Design</p>
+        </footer>
     </div>
-
-    <script>
-        // Gestione del cambio lingua
-        document.querySelectorAll('.lang-icon').forEach(icon => {
-            icon.addEventListener('click', function() {
-                const lang = this.getAttribute('data-lang');
-                // Implementa qui la logica per cambiare la lingua
-                console.log('Cambio lingua a:', lang);
-            });
-        });
-
-        // Gestione del form di login
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            fetch('https://smarttp-backend-7wr7.onrender.com/api/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.token) {
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('role', data.role);
-                    localStorage.setItem('username', data.username);
-                    window.location.href = 'home.html';
-                } else {
-                    alert('Login fallito. Controlla le tue credenziali.');
-                }
-            })
-            .catch(error => {
-                console.error('Errore:', error);
-                alert('Si è verificato un errore durante il login.');
-            });
-        });
-
-        // Gestione password dimenticata
-        document.getElementById('forgotPassword').addEventListener('click', function(e) {
-            e.preventDefault();
-            // Implementa qui la logica per il recupero password
-            console.log('Recupero password');
-        });
-
-        // Gestione registrazione
-        document.getElementById('register').addEventListener('click', function(e) {
-            e.preventDefault();
-            // Implementa qui la logica per la registrazione
-            console.log('Registrazione');
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
