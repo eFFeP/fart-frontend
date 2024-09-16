@@ -1,3 +1,7 @@
+:root {
+    --accent-color: rgb(68,145,170);
+}
+
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -24,14 +28,14 @@ body {
 
 .lang-selector {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     margin-bottom: 20px;
     gap: 10px;
 }
 
 .lang-icon {
-    width: 40px;
-    height: 40px;
+    width: 36px; /* Ridotto del 10% da 40px */
+    height: 36px; /* Ridotto del 10% da 40px */
     border-radius: 50%;
     border: none;
     background-color: #f0f0f0;
@@ -42,6 +46,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    font-size: 0.9em; /* Ridotto leggermente il font size */
 }
 
 .lang-icon:hover {
@@ -49,15 +54,15 @@ body {
 }
 
 .lang-icon.active {
-    background-color: #4a90e2;
+    background-color: var(--accent-color);
     color: white;
 }
 
 .logo {
-    max-width: 400px;
+    max-width: 320px; /* Ridotto del 20% da 400px */
     width: 100%;
     display: block;
-    margin: 40px auto 20px; /* Aggiunto margine superiore */
+    margin: 40px auto 20px;
 }
 
 form {
@@ -73,14 +78,14 @@ input, button {
 }
 
 button {
-    background-color: #4a90e2;
+    background-color: var(--accent-color);
     color: white;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
 button:hover {
-    background-color: #3a7bd5;
+    background-color: rgba(68,145,170,0.8);
 }
 
 .links {
@@ -90,15 +95,15 @@ button:hover {
 }
 
 .links a {
-    color: #4a90e2;
+    color: var(--accent-color);
     text-decoration: none;
 }
 
 .ps-design {
     text-align: center;
     margin-top: 20px;
-    margin-bottom: 0; /* Rimosso il margine inferiore */
-    color: #4a90e2;
+    margin-bottom: 0;
+    color: var(--accent-color);
 }
 
 @media (max-width: 768px) {
@@ -108,11 +113,7 @@ button:hover {
     }
 
     .logo {
-        max-width: 300px;
-        margin-top: 30px; /* Leggermente ridotto per dispositivi mobili */
-    }
-
-    .lang-selector {
-        justify-content: center;
+        max-width: 240px; /* Ridotto proporzionalmente per dispositivi mobili */
+        margin-top: 30px;
     }
 }
