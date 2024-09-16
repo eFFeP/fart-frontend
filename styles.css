@@ -23,22 +23,22 @@ body {
 }
 
 .logo {
-    max-width: 200px; /* Raddoppiata la dimensione del logo */
+    max-width: 400px; /* Raddoppiata la dimensione del logo */
+    width: 100%;
     display: block;
     margin: 0 auto 20px;
 }
 
 .lang-selector {
-    position: absolute;
-    top: 20px;
-    right: 20px;
     display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
     gap: 10px;
 }
 
 .lang-icon {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     border: none;
     background-color: #f0f0f0;
@@ -103,9 +103,11 @@ button:hover {
         padding: 15px;
     }
 
+    .logo {
+        max-width: 300px; /* Leggermente ridotto per dispositivi mobili */
+    }
+
     .lang-selector {
-        position: static;
         justify-content: center;
-        margin-bottom: 20px;
     }
 }
