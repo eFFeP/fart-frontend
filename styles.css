@@ -19,10 +19,11 @@ body {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    position: relative;
 }
 
 .logo {
-    max-width: 100px;
+    max-width: 200px; /* Raddoppiata la dimensione del logo */
     display: block;
     margin: 0 auto 20px;
 }
@@ -36,8 +37,8 @@ body {
 }
 
 .lang-icon {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     border-radius: 50%;
     border: none;
     background-color: #f0f0f0;
@@ -54,11 +55,6 @@ body {
 .lang-icon.active {
     background-color: #4a90e2;
     color: white;
-}
-
-h2 {
-    text-align: center;
-    color: #333;
 }
 
 form {
