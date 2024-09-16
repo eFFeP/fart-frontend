@@ -3,48 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="/styles.css">
+    <title>Smart TP - Home</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="menu-icon" onclick="toggleMenu()">☰</div>
+
+    <div class="menu">
+        <ul>
+            <li><a href="home.html">Home</a></li>
+            <li><a href="#" onclick="showProfile()">Profilo</a></li>
+            <li><a href="admin-panel.html" id="adminPanelLink">Pannello Amministrativo</a></li>
+            <li><a href="#" id="logout">Logout</a></li>
+        </ul>
+    </div>
+
     <div class="container">
-        <h1>Login</h1>
-        <form id="loginForm">
-            <input type="email" id="email" placeholder="Email" required>
-            <input type="password" id="password" placeholder="Password" required>
-            <button type="submit">Accedi</button>
-        </form>
-        <p><a href="/forgot-password.html">Password dimenticata?</a></p>
+        <h1>Benvenuto in Smart TP</h1>
+        <p id="welcomeMessage"></p>
     </div>
 
     <script>
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
+        function toggleMenu() {
+            document.querySelector('.menu').classList.toggle('open');
+        }
 
-            fetch('/api/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password }),
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.token) {
-                    localStorage.setItem('token', data.token);
-                    localStorage.setItem('role', data.role);
-                    window.location.href = '/home.html';
-                } else {
-                    alert('Login fallito. Controlla le tue credenziali.');
-                }
-            })
-            .catch(error => {
-                console.error('Errore:', error);
-                alert('Si è verificato un errore durante il login.');
-            });
+        function showProfile() {
+            // Implementa la visualizzazione del profilo
+            alert('Funzionalità profilo non ancora implementata');
+        }
+
+        document.getElementById('logout').addEventListener('click', function() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('role');
+            localStorage.removeItem('username');
+            window.location.href = 'index.html';
         });
+
+        // Verifica del ruolo e visualizzazione del link al pannello admin
+        const role = localStorage.getItem('role');
+        const adminPanelLink = document.getElementById('adminPanelLink');
+        if (role !== 'admin' && role !== 'superadmin') {
+            adminPanelLink.style.display = 'none';
+        }
+
+        // Messaggio di benvenuto personalizzato
+        const username = localStorage.getItem('username');
+        const welcomeMessage = document.getElementById('welcomeMessage');
+        if (username) {
+            welcomeMessage.textContent = `Benvenuto, ${username}!`;
+        }
 
         // Funzione per il logout automatico
         let inactivityTimer;
@@ -57,7 +65,8 @@
         function autoLogout() {
             localStorage.removeItem('token');
             localStorage.removeItem('role');
-            window.location.href = '/index.html';
+            localStorage.removeItem('username');
+            window.location.href = 'index.html';
         }
 
         document.addEventListener('mousemove', resetInactivityTimer);
