@@ -37,31 +37,35 @@
 
         document.getElementById('logout').addEventListener('click', logout);
 
-        function loadUserInfo() {
-            const token = localStorage.getItem('token');
-            const userRole = localStorage.getItem('userRole');
-            
-            fetch('https://autisti.onrender.com/user-profile', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            })
-            .then(response => response.json())
-            .then(user => {
-                document.getElementById('welcomeMessage').textContent = `Benvenuto ${user.username}`;
-                document.getElementById('userDetails').textContent = `${user.ditta} - ${user.settore ? user.settore.charAt(0).toUpperCase() : ''}${user.matricola} - ${user.deposito}`;
-                
-                console.log('User role from localStorage:', userRole); // Per debugging
-                
-                // Mostra il link al pannello amministrativo solo per admin e superadmin
-                if (userRole === 'admin' || userRole === 'superadmin') {
-                    document.getElementById('adminPanelLink').style.display = 'block';
-                }
-            })
-            .catch(error => {
-                console.error('Errore nel caricamento delle informazioni utente:', error);
-            });
+       function loadUserInfo() {
+    const token = localStorage.getItem('token');
+    const userRole = localStorage.getItem('userRole');
+    
+    console.log('Token:', token); // Per debugging
+    console.log('User role from localStorage:', userRole); // Per debugging
+
+    fetch('https://autisti.onrender.com/user-profile', {
+        headers: {
+            'Authorization': `Bearer ${token}`
         }
+    })
+    .then(response => response.json())
+    .then(user => {
+        console.log('User data:', user); // Per debugging
+        document.getElementById('welcomeMessage').textContent = `Benvenuto ${user.username}`;
+        document.getElementById('userDetails').textContent = `${user.ditta} - ${user.settore ? user.settore.charAt(0).toUpperCase() : ''}${user.matricola} - ${user.deposito}`;
+        
+        if (userRole === 'admin' || userRole === 'superadmin') {
+            console.log('Showing admin panel link'); // Per debugging
+            document.getElementById('adminPanelLink').style.display = 'block';
+        } else {
+            console.log('Hiding admin panel link'); // Per debugging
+        }
+    })
+    .catch(error => {
+        console.error('Errore nel caricamento delle informazioni utente:', error);
+    });
+}
 
         document.addEventListener('DOMContentLoaded', loadUserInfo);
     </script>
