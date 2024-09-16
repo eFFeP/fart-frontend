@@ -8,23 +8,23 @@
 </head>
 <body>
     <div class="menu-icon" onclick="toggleMenu()">☰</div>
-
+    
     <nav class="menu" id="sideMenu">
         <ul>
             <li><a href="#">Home</a></li>
             <li><a href="#">Profilo</a></li>
-             <li id="adminPanelLink" style="display: none;"><a href="admin-panel.html">Pannello Amministrativo</a></li>
+            <li id="adminPanelLink"><a href="admin-panel.html">Pannello Amministrativo</a></li>
             <li><a href="#" id="logout">Logout</a></li>
         </ul>
     </nav>
 
     <div class="container">
-       <h1 id="welcomeMessage"></h1>
+        <h1 id="welcomeMessage"></h1>
         <p id="userDetails" style="font-size: 0.9em;"></p>
     </div>
 
     <script>
-       function toggleMenu() {
+        function toggleMenu() {
             const menu = document.getElementById('sideMenu');
             menu.classList.toggle('open');
         }
@@ -37,35 +37,37 @@
 
         document.getElementById('logout').addEventListener('click', logout);
 
-       function loadUserInfo() {
-    const token = localStorage.getItem('token');
-    const userRole = localStorage.getItem('userRole');
-    
-    console.log('Token:', token); // Per debugging
-    console.log('User role from localStorage:', userRole); // Per debugging
-
-    fetch('https://autisti.onrender.com/user-profile', {
-        headers: {
-            'Authorization': `Bearer ${token}`
+        function loadUserInfo() {
+            const token = localStorage.getItem('token');
+            const userRole = localStorage.getItem('userRole');
+            
+            fetch('https://autisti.onrender.com/user-profile', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+            .then(response => response.json())
+            .then(user => {
+                document.getElementById('welcomeMessage').textContent = `Benvenuto ${user.username}`;
+                
+                const details = [
+                    user.ditta,
+                    user.settore && user.matricola ? `${user.settore.charAt(0).toUpperCase()}${user.matricola}` : null,
+                    user.deposito
+                ].filter(Boolean).join(' - ');
+                
+                document.getElementById('userDetails').textContent = details;
+                
+                if (userRole === 'admin' || userRole === 'superadmin') {
+                    document.getElementById('adminPanelLink').style.display = 'block';
+                } else {
+                    document.getElementById('adminPanelLink').style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Errore nel caricamento delle informazioni utente:', error);
+            });
         }
-    })
-    .then(response => response.json())
-    .then(user => {
-        console.log('User data:', user); // Per debugging
-        document.getElementById('welcomeMessage').textContent = `Benvenuto ${user.username}`;
-        document.getElementById('userDetails').textContent = `${user.ditta} - ${user.settore ? user.settore.charAt(0).toUpperCase() : ''}${user.matricola} - ${user.deposito}`;
-        
-        if (userRole === 'admin' || userRole === 'superadmin') {
-            console.log('Showing admin panel link'); // Per debugging
-            document.getElementById('adminPanelLink').style.display = 'block';
-        } else {
-            console.log('Hiding admin panel link'); // Per debugging
-        }
-    })
-    .catch(error => {
-        console.error('Errore nel caricamento delle informazioni utente:', error);
-    });
-}
 
         document.addEventListener('DOMContentLoaded', loadUserInfo);
     </script>
