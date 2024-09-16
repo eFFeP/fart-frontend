@@ -261,6 +261,36 @@
 
         // Inizializza la lingua
         updateLanguage('it');
+
+
+        function login(event) {
+    event.preventDefault();
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    fetch('https://autisti.onrender.com/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.token) {
+            localStorage.setItem('token', data.token);
+            localStorage.setItem('userRole', data.role);
+            console.log('User role:', data.role); // Per debugging
+            window.location.href = 'home.html';
+        } else {
+            alert('Login fallito. Controlla le tue credenziali.');
+        }
+    })
+    .catch(error => {
+        console.error('Errore:', error);
+        alert('Si è verificato un errore durante il login.');
+    });
+}
     </script>
 </body>
 </html>
